@@ -52,7 +52,6 @@ def exctract_discipline_school(message):
             break
     return subject, classes
 
-
 def analyze_and_respond(message):
     # exctract_discipline_school('j’ai un remplacement disponible pour une classe de 7/8/9 en math qui est disponibe')
     if "bonjour" in message.lower():
