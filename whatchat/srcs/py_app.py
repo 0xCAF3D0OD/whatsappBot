@@ -1,28 +1,13 @@
 import logging
 import re
-from twilio.rest import Client
 from fastapi import FastAPI, Request
-# from langchain_community.llms import CTransformers
-from app import response
 from urllib.parse import parse_qs
-from dotenv import dotenv_values
-config = dotenv_values("/app/.env")
 
 app = FastAPI()
-
-TWILIO_ACCOUNT_SID=config["TWILIO_ACCOUNT_SID"]
-TWILIO_AUTH_TOKEN=config["TWILIO_AUTH_TOKEN"]
-TWILIO_NUMBER=config["TWILIO_NUMBER"]
-
-account_sid = TWILIO_ACCOUNT_SID
-auth_token = TWILIO_AUTH_TOKEN
-client = Client(account_sid, auth_token)
-twilio_number = TWILIO_NUMBER
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-# llm = CTransformers(model="openhermes-2-mistral-7b.Q8_0.gguf", model_type= "llama")
 
 def math_var():
     maths_variations = [
@@ -46,34 +31,29 @@ def exctract_discipline_school(message):
     disciplines = math_var()
     subject = None
     for variation in disciplines:
-        print(variation, message)
         if (variation in message):
             subject = variation
             break
-    print(subject, classes)
     return subject, classes
 
 
 def analyze_and_respond(message):
     message = message.lower()
     if "bonjour" in message:
-        return "Bonjour ! Comment puis-je vous aider ?"
+        return "✋"
     else:
         subject, classes = exctract_discipline_school(message)
         classes_eligible = any(int(year) in [7, 8, 9] for year in classes)
         return "✋" if classes_eligible and subject else None
 
-# Sending message logic through Twilio Messaging API
-def send_message(to_number, body_text):
-    try:
-        message = client.messages.create(
-            from_=f"whatsapp:{twilio_number}",
-            body=body_text,
-            to=f"whatsapp:{to_number}"
-            )
-        logger.info(f"Message sent to {to_number}: {message.body}")
-    except Exception as e:
-        logger.error(f"Error sending message to {to_number}: {e}")
+# Simuler l'envoi de message via WhatsApp Web
+def send_whatsapp_web_message(response):
+    if response:
+        logger.info(f"Simulating sending message via WhatsApp Web: {response}")
+        # Ici, vous intégreriez le code pour interagir avec WhatsApp Web
+        # Par exemple, en utilisant Selenium comme mentionné précédemment
+    else:
+        logger.info("No response to send")
 
 @app.post("/")
 async def reply(request: Request):
@@ -81,19 +61,9 @@ async def reply(request: Request):
         form_data = await request.form()
         message = form_data.get("Body", "").strip()
         response = analyze_and_respond(message)
-        send_message("+41764304321", response)
+        send_whatsapp_web_message(response)
         return {"message": response}
     except Exception as e:
         logger.error(f"Error processing request: {e}")
-        # send_message("+41764304321", "Une erreur s'est produite, veuillez réessayer.")
         return {"message": "Une erreur s'est produite, veuillez réessayer."}
 
-# @app.post("/")
-# async def reply(question:Request):
-#     llm_question = parse_qs(await question.body())[b'Body'][0].decode()
-#     try:
-#         chat_response = response(llm_question, llm)
-#         send_message("+91xxxxxxxxxx", chat_response)
-#     except:
-#          send_message("+91xxxxxxxxxx", "wait")
-#     return chat_response
