@@ -62,24 +62,6 @@ def analyze_and_respond(message):
         subject, classes = exctract_discipline_school(message)
         classes_eligible = any(int(year) in [7, 8, 9] for year in classes)
         return "✋" if classes_eligible and subject else None
-    # message = message.lower()
-    # if "bonjour" in message:
-    #     return "Bonjour ! Comment puis-je vous aider ?"
-    # else:
-    #     subject, classes = exctract_discipline_school(message)
-    #     classe_eligible = False
-    #
-    #     for class_year in classes:
-    #         if int(class_year) in [7, 8, 9]:
-    #             classe_eligible = True
-    #             break
-    #
-    #     print(f"Matière: {subject}, Classes: {classes}, Éligible: {classe_eligible}")
-    #
-    #     if classe_eligible and subject is not None:
-    #         return "Je suis disponible"
-    #     else:
-    #         return "Désolé, je ne suis pas disponible pour cette demande."
 
 # Sending message logic through Twilio Messaging API
 def send_message(to_number, body_text):
