@@ -17,5 +17,4 @@ RUN ngrok config add-authtoken ${NGROK_AUTH_TOKEN}
 
 
 #RUN uvicorn twilio_app:app --port 8080
-CMD ["bash", "-c", "uvicorn twilio_app:app --reload --port 8080"]
-
+CMD ["bash", "-c", "uvicorn py_app:app --reload --port 8080"]
