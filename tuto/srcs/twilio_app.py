@@ -46,27 +46,44 @@ def exctract_discipline_school(message):
     disciplines = math_var()
     subject = None
     for variation in disciplines:
+        print(variation, message)
         if (variation in message):
-            print(variation)
             subject = variation
             break
+    print(subject, classes)
     return subject, classes
 
+
 def analyze_and_respond(message):
-    # exctract_discipline_school('j’ai un remplacement disponible pour une classe de 7/8/9 en math qui est disponibe')
-    if "bonjour" in message.lower():
+    message = message.lower()
+    if "bonjour" in message:
         return "Bonjour ! Comment puis-je vous aider ?"
-    elif "aide" in message.lower():
-        return "Voici comment je peux vous aider : ..."
     else:
-        subject, classe = exctract_discipline_school(message)
-        print(subject, classe)
-        return "je suis disponible"
+        subject, classes = exctract_discipline_school(message)
+        classes_eligible = any(int(year) in [7, 8, 9] for year in classes)
+        return "✋" if classes_eligible and subject else None
+    # message = message.lower()
+    # if "bonjour" in message:
+    #     return "Bonjour ! Comment puis-je vous aider ?"
+    # else:
+    #     subject, classes = exctract_discipline_school(message)
+    #     classe_eligible = False
+    #
+    #     for class_year in classes:
+    #         if int(class_year) in [7, 8, 9]:
+    #             classe_eligible = True
+    #             break
+    #
+    #     print(f"Matière: {subject}, Classes: {classes}, Éligible: {classe_eligible}")
+    #
+    #     if classe_eligible and subject is not None:
+    #         return "Je suis disponible"
+    #     else:
+    #         return "Désolé, je ne suis pas disponible pour cette demande."
 
 # Sending message logic through Twilio Messaging API
 def send_message(to_number, body_text):
     try:
-        print(f"twilio number is -----> {twilio_number}, number is -----> {to_number}")
         message = client.messages.create(
             from_=f"whatsapp:{twilio_number}",
             body=body_text,
@@ -77,14 +94,17 @@ def send_message(to_number, body_text):
         logger.error(f"Error sending message to {to_number}: {e}")
 
 @app.post("/")
-async def reply(question: Request):
-    no_message = parse_qs(await question.body())[b'Body'][0].decode()
+async def reply(request: Request):
     try:
-        response = analyze_and_respond(no_message)  # Utiliser la fonction d'analyse et de réponse
+        form_data = await request.form()
+        message = form_data.get("Body", "").strip()
+        response = analyze_and_respond(message)
         send_message("+41764304321", response)
-    except:
-        send_message("+41764304321", "wait")
-    return response
+        return {"message": response}
+    except Exception as e:
+        logger.error(f"Error processing request: {e}")
+        # send_message("+41764304321", "Une erreur s'est produite, veuillez réessayer.")
+        return {"message": "Une erreur s'est produite, veuillez réessayer."}
 
 # @app.post("/")
 # async def reply(question:Request):
