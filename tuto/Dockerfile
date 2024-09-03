@@ -8,8 +8,6 @@ COPY ./requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-#COPY . .
-
 ARG NGROK_AUTH_TOKEN
 ENV NGROK_AUTH_TOKEN=${NGROK_AUTH_TOKEN}
 RUN echo "NGROK_AUTH_TOKEN: $NGROK_AUTH_TOKEN"
@@ -17,7 +15,6 @@ RUN echo "NGROK_AUTH_TOKEN: $NGROK_AUTH_TOKEN"
 RUN pip3 install --upgrade ngrok
 RUN ngrok config add-authtoken ${NGROK_AUTH_TOKEN}
 
-#COPY ./.env .
 
 #RUN uvicorn twilio_app:app --port 8080
 CMD ["bash", "-c", "uvicorn twilio_app:app --reload --port 8080"]
