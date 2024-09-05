@@ -2,3 +2,7 @@
 1_trash/
 2_twilio/.env
 3_selenium/.env
+whatsapp-bot/node_modules/
+node_modules
+archives/
+4_devPuppeteer/.env

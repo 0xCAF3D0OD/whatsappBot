@@ -1,0 +1,7 @@
+gnupg
+wget
+curl
+libgbm-dev
+xvfb
+x11-apps
+x11vnc
