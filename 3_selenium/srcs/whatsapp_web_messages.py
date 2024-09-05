@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
 import time
 
 
@@ -13,20 +15,45 @@ def send_whatsapp_web_message(response, logger):
 
     logger.info(f"Sending message via WhatsApp Web: {response}")
     driver = None
+    geckodriver_path = None
+    options = None
     try:
-        # Initialiser le driver Selenium pour Firefox
-        driver = webdriver.Firefox()
+        options = Options()
+        options.add_argument('-headless')
+        # Chemin vers geckodriver
+        geckodriver_path = "/usr/local/bin/geckodriver"
+
+        # Créez un objet Service avec le chemin du geckodriver
+        service = Service(geckodriver_path)
+
+        # Initialiser le driver Selenium pour Firefox avec le service
+        driver = webdriver.Firefox(service=service, options=options)
 
         # Ouvrir WhatsApp Web
         driver.get('https://web.whatsapp.com/')
 
-        # Attendre que l'utilisateur scanne le QR code manuellement
-        input("Scan the QR code and press Enter after WhatsApp Web is loaded...")
+        # # Attendre que l'utilisateur scanne le QR code manuellement
+        # input("Scan the QR code and press Enter after WhatsApp Web is loaded...")
 
-        # Attendre que la page soit chargée
-        WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.XPATH, '//div[@contenteditable="true"][@data-tab="1"]'))
+        # Attendre que WhatsApp Web soit chargé (max 60 secondes)
+        logger.info("Waiting for WhatsApp Web to load (60 seconds timeout)...")
+        WebDriverWait(driver, 60).until(
+            EC.presence_of_element_located((By.XPATH, '//div[@data-testid="chats-filled"]'))
         )
+
+        # Vérifier si on est connecté
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, '//div[@contenteditable="true"][@data-tab="1"]'))
+            )
+            logger.info("Successfully connected to WhatsApp Web")
+        except:
+            logger.error("Failed to connect to WhatsApp Web. Please check authentication.")
+            return
+        # # Attendre que la page soit chargée
+        # WebDriverWait(driver, 30).until(
+        #     EC.presence_of_element_located((By.XPATH, '//div[@contenteditable="true"][@data-tab="1"]'))
+        # )
 
         # Trouver le champ de saisie du message
         input_box = driver.find_element(By.XPATH, '//div[@contenteditable="true"][@data-tab="1"]')
