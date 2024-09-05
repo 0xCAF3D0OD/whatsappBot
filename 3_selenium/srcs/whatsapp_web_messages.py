@@ -21,7 +21,7 @@ def send_whatsapp_web_message(response, logger):
         options = Options()
         options.add_argument('-headless')
         # Chemin vers geckodriver
-        geckodriver_path = "/usr/local/bin/geckodriver"
+        geckodriver_path = "/usr/local/bin/geckodri ver"
 
         # Créez un objet Service avec le chemin du geckodriver
         service = Service(geckodriver_path)
