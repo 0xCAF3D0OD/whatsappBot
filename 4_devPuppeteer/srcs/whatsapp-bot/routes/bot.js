@@ -10,11 +10,6 @@ let page;
 // Création du routeur
 const bot = express.Router();
 
-bot.get('/favicon/1x/favicon/', (req, res) => {
-    const faviconPath = path.join(__dirname, 'public', 'images', 'favicon.ico');
-    res.sendFile(faviconPath);
-});
-
 // Définition des routes sur le routeur
 bot.get('/', (req, res) => {
     res.send(`
