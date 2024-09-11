@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const ignoredPaths = ['/favicon/1x/favicon/', '/favicon/2x/favicon/', '/sw.js'];
 

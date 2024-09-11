@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - QR Code scanner</title>
+    <style>
+      body {
+        background-color: white;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-size: 16px;
+        margin: 20px auto;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="qrcode-container">
+      <h1>QR Code Scanner</h1>
+      <img src="/images/qrCode.png" alt="QR Code">
+    </div>
+    <div id="message" style="display:none;">
+      <h1>QR Code scanné avec succès !</h1>
+      <button onclick="location.href='/bot/about/scrape/what'">Continuer</button>
+    </div>
+  <script>
+    function waitForConfirmationQRCode() {
+      fetch('/bot/check_qr_code_status')
+      .then((response) => {
+        if (! response.ok)
+          throw new Error(`HTTP Error! status: ${response.status}`);
+        else
+          return response.json();
+      })
+      .then((data) => {
+        if (data.scanned) {
+          console.log("QR Code scanné avec succès ! dans l'html");
+          console.log(`data success: ${data}`);
+          document.getElementById('qrcode-container').style.display = 'none';
+          document.getElementById('message').style.display = 'block';
+        }
+        else {
+          console.log(`data fail: ${data}`);
+          setTimeout(waitForConfirmationQRCode, 5000);
+        }
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la vérification du statut du QR code:', error);
+        setTimeout(waitForConfirmationQRCode, 10000);
+      })
+    }
+    waitForConfirmationQRCode();
+  </script>
+  </body>
+</html>

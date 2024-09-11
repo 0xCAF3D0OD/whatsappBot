@@ -1,8 +1,7 @@
 .idea/
+.DStore
 1_trash/
-2_twilio/.env
-3_selenium/.env
-whatsapp-bot/node_modules/
+.env
 node_modules
 archives/
-4_devPuppeteer/.env
+windowScreenshot.png
