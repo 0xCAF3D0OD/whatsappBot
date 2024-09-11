@@ -1,6 +1,18 @@
 const sharp = require('sharp');
 const path = require('path');
 
+async function screenshot(page, name) {
+    name = path.join(__dirname, '..', 'public/images', `${name}.png`);
+    await page.screenshot({ path: name, fullpage: true });
+}
+
+async function timeOutFunction(page, time) {
+    console.log("wait a sec");
+    await page.evaluate((time) => {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }, time);
+}
+
 // Fonction pour générer et sauvegarder le QR code
 async function generateQRCode(page) {
     const { qrCodeData, logoSVG } = await page.evaluate(() => {
@@ -45,5 +57,7 @@ async function waitForQRCodeScan(page) {
 
 module.exports = {
     generateQRCode,
-    waitForQRCodeScan
+    waitForQRCodeScan,
+    screenshot,
+    timeOutFunction,
 };
