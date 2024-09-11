@@ -26,14 +26,6 @@ fi
 echo "cd $WHATSAPP_BOT_DIR"
 cd "$WHATSAPP_BOT_DIR"
 
-if [ ! -f routes/bot.js ]; then
-  echo "replace content app and add bot.js to routes"
-  cat ../app.js > app.js
-  cp ../bot.js routes/
-else
-  echo "or not"
-fi
-
 echo "install dependency"
 npm install puppeteer
 npm install --arch=arm64 --platform=linuxmusl sharp
