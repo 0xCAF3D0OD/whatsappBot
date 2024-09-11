@@ -9,6 +9,8 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+app.use(express.static(path.join(__dirname)));
+
 const ignoredPaths = ['/favicon/1x/favicon/', '/favicon/2x/favicon/', '/sw.js'];
 
 // Middleware pour ignorer certaines requêtes
