@@ -127,32 +127,46 @@
 <body>
 <div class="container">
     <h1>robot is lauch</h1>
-    <form id="contact-form" action="/bot/about/scrape/what/launch" method="POST">
+    <form id="contact-form" action="/bot/about/scrape/what/launch" method="GET">
         <div class="input-group">
-            <input type="text" id="contact" name="contact" placeholder="Entrez le nom du contact" required>
+            <input type="text" id="contact" name="contact" value="" placeholder="Entrez le nom du contact" required>
         </div>
         <div class="input-group">
-            <input type="text" id="message" name="message" placeholder="Entrez le message" required>
+            <input type="text" id="message" name="message" value="" placeholder="Entrez le message" required>
         </div>
+        <button class="button" type="submit" id="submit-btn">Envoyer</button>
     </form>
-    <button class="button" onclick="reloadPage()">rafraichir la page</button>
+    <img class="screenshot" src="/images/windowScreenshotbeforeRefresh.png" alt="WhatsApp Web Screenshot">
+    <img class="screenshot" src="/images/windowScreenshotRefresh.png" alt="WhatsApp Web Screenshot">
     <img class="screenshot" src="/images/windowScreenshotSelection.png" alt="WhatsApp Web Screenshot">
     <img class="screenshot" src="/images/windowScreenshotType.png" alt="WhatsApp Web Screenshot">
     <img class="screenshot" src="/images/windowScreenshotEnter.png" alt="WhatsApp Web Screenshot">
     <img class="screenshot" src="/images/windowScreenshotSendMessage.png" alt="WhatsApp Web Screenshot">
 </div>
 <script>
-    let hasNewNotifications = true;
 
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let newContact = document.getElementById('contact').value;
+        let newMessage = document.getElementById('message').value;
+
+        let newUrl = '/bot/about/scrape/what/launch?contact=' + encodeURIComponent(newContact) +
+            '&message=' + encodeURIComponent(newMessage);
+
+        window.location.href = newUrl;
+    });
+
+    function submitInformations() {
+
+    }
     function reloadPage() {
         location.reload();
     }
-    function checkNotifications() {}
-    function periodicCheck() {
-        checkNotifications();
-        setTimeout(periodicCheck, 10000);
-    }
-
+    // function periodicCheck() {
+    //     checkNotifications();
+    //     setTimeout(periodicCheck, 10000);
+    // }
+    //
     // // S'assurer que la fonction est appelée une fois que le DOM est chargé
     // document.addEventListener('DOMContentLoaded', (event) => {
     //     console.log('DOM fully loaded and parsed');

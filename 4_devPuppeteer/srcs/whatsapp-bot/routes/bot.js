@@ -3,9 +3,10 @@ const puppeteer = require("puppeteer");
 const fs = require('fs/promises');
 const sharp = require('sharp');
 const path = require('path');
-const { generateQRCode ,waitForQRCodeScan, timeOutFunction, screenshot } = require('./botUtils.js');
+const { generateQRCode ,waitForQRCodeScan, timeOutFunction, screenshot, findRigntSpan } = require('./botUtils.js');
 const events = require("events");
 
+let currentContact = null;
 let lastNotificationCount = 0;
 let qrCodeScanned = false;
 let browser;
@@ -49,7 +50,6 @@ bot.get('/about/scrape', async (req, res) => {
             qrCodeScanned = scanned;
         }).catch(console.error);
     } catch (error) {
-
         res.status(500).send(`Erreur: ${error.message}`);
     }
 });
@@ -96,57 +96,61 @@ bot.get('/check-notifications', async(req, res) => {
 })
 
 bot.get('/about/scrape/what/launch', async (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public/pages', 'robot.html'));
-    const selector1 = 'p.selectable-text.copyable-text.x15bjb6t.x1n2onr6';
-    const selector2 = 'span.matched-text._ao3e'
-    if (! req.query.contact) return res.status(404).send("no contact given");
-    if (! req.query.message) return res.status(404).send("no message given");
+    const selectorSearchInput = 'p.selectable-text.copyable-text.x15bjb6t.x1n2onr6';
+    const selectorContactInput = 'div[aria-placeholder="Type a message"][contenteditable="true"][data-lexical-editor="true"]';
+    const selectorRefreshContact = 'button._ah_y';
+    let contact = req.query.contact || "Paps";
+    let message = req.query.message || "yolo";
+
     console.log("we are on our way to moneeeyy !");
+
     try {
+        if (currentContact !== contact) {
+            currentContact = contact;
+            /*Page.waitForSelector(); Attendre que le sélecteur apparaisse dans la page. Si, au moment de l'appel de la méthode,
+             le sélecteur existe déjà, la méthode renvoie immédiatement.
+             Si le sélecteur n'apparaît pas après le délai d'attente de quelques millisecondes, la fonction est lancée.*/
+            try {
+                await page.waitForSelector(selectorRefreshContact, { timeout: 5000 });
+                await page.click(selectorRefreshContact)
+                    .then(() => screenshot(page, 'windowScreenshotRefresh'))
+                    .then(() => timeOutFunction(page, 2000));
+            } catch (error) {
+                console.warn("Couldn't find refresh button, continuing anyway:", error.message);
+            }
+            try {
+                await page.waitForSelector(selectorSearchInput);
 
-        /*Page.waitForSelector(); Attendre que le sélecteur apparaisse dans la page. Si, au moment de l'appel de la méthode,
-         le sélecteur existe déjà, la méthode renvoie immédiatement.
-         Si le sélecteur n'apparaît pas après le délai d'attente de quelques millisecondes, la fonction est lancée.*/
-        await page.waitForSelector(selector1)
-            .then(() => page.click(selector1, {
-                delay: 3000
-            }));
-        if (! req.query.contact) return res.status(404).send("no contact given");
+                await page.click(selectorSearchInput, { delay: 3000 })
+                    .then(() => screenshot(page, 'windowScreenshotSelection'))
+                    .then(() => timeOutFunction(page, 3000));
 
-        await screenshot(page, 'windowScreenshotSelection');
-        await timeOutFunction(page, 3000);
+                await page.type(selectorSearchInput, currentContact)
+                    .then(() => screenshot(page, 'windowScreenshotType'))
+                    .then(() => timeOutFunction(page, 2000));
 
-        await page.type(selector1, req.query.contact);
-
-        await screenshot(page, 'windowScreenshotType');
-        await timeOutFunction(page, 3000);
-
-        await page.keyboard.press("Enter");
-
-        await screenshot(page, 'windowScreenshotEnter');
-        await timeOutFunction(page, 3000);
-        console.log("Actions completed successfully!");
-
-        let messageAmount = 1;
-
-        await page.waitForSelector(selector2)
-            .then(() => page.click(selector2, {
-                delay: 3000
-            }));
-
-        await page.type(selector2, req.query.message);
-        // for(let i = 0; i<messageAmount; i++){
-        //     await timeOutFunction(page, 3000);
-        //
-        //     await page.type(selector2, "yollo");
-        //
-        //     await timeOutFunction(page, 3000);
-        //
-        //     // await page.keyboard.press("Enter");
-        // }
+                await page.keyboard.press("Enter")
+                    .then(() => screenshot(page, 'windowScreenshotEnter'))
+                    .then(() => timeOutFunction(page, 2000));
+            } catch (error) {
+                console.error("Error during adding contact to search bar");
+                res.status(500).send(`Error during adding contact to search bar ${error}`);
+            }
+        }
+        try {
+            await page.waitForSelector(selectorContactInput)
+            await page.type(selectorContactInput, message)
+                .then(() => screenshot(page, 'windowScreenshotEnter'))
+                .then(() => timeOutFunction(page, 1000));
+            await page.keyboard.press("Enter")
+                .then(() => screenshot(page, 'windowScreenshotSendMessage'))
+                .then(() => timeOutFunction(page, 2000));
+        } catch (error) {
+            console.error("Error during typing to contact");
+            res.status(500).send(`Error during typing to contact ${error}`);
+        }
         console.log("Actions completed successfully 2!");
-        await screenshot(page, 'windowScreenshotSendMessage');
-
+        res.sendFile(path.join(__dirname, '..', 'public/pages', 'robot.html'));
     } catch (error) {
         console.error("page is not accessible");
         res.status(500).send(`page is not accessible ${error}`);

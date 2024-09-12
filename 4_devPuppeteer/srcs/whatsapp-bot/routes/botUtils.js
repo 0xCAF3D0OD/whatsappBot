@@ -1,6 +1,15 @@
 const sharp = require('sharp');
 const path = require('path');
 
+function findRigntSpan(contact, span) {
+        const spans = document.querySelectorAll(span);
+        for (const span of spans) {
+            if (span.textContent.trim() === contact)
+                return span
+        }
+        return null;
+}
+
 async function screenshot(page, name) {
     name = path.join(__dirname, '..', 'public/images', `${name}.png`);
     await page.screenshot({ path: name, fullpage: true });
@@ -60,4 +69,5 @@ module.exports = {
     waitForQRCodeScan,
     screenshot,
     timeOutFunction,
+    findRigntSpan
 };
