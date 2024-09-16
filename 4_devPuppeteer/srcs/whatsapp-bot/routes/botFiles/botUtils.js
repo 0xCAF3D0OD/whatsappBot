@@ -19,7 +19,7 @@ function findRigntSpan(contact, span) {
 }
 
 async function screenshot(page, name) {
-    name = path.join(__dirname, '..', 'public/images', `${name}.png`);
+    name = path.join(__dirname, '../..', 'public/images', `${name}.png`);
     await page.screenshot({ path: name, fullpage: true });
 }
 
@@ -48,7 +48,7 @@ async function generateQRCode(page) {
         input: logoSVGBuffer,
         gravity: 'center',
         blend: 'over'
-    }]).toFile(path.join(__dirname, '..', 'public/images', 'qrCode.png'));
+    }]).toFile(path.join(__dirname, '../..', 'public/images', 'qrCode.png'));
 
     console.log('QR Code avec logo sauvegardé comme qrCode.png');
 }

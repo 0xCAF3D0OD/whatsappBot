@@ -22,10 +22,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const bot = require('./routes/bot');
+const bot = require('./routes/homeRoutes');
 
 app.use("/bot", bot);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
