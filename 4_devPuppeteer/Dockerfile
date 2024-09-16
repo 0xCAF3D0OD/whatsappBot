@@ -18,12 +18,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Set the Chrome repo.
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+RUN wget -O- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor | tee /etc/apt/keyrings/google-chrome.gpg > /dev/null \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
+
 
 # Install Chrome.
-RUN apt-get update && apt-get -y install google-chrome-stable
-
+RUN apt-get update && apt-get -y install google-chrome-stable && \
+     apt-get clean && rm -rf /var/lib/apt/lists/*
 WORKDIR /app/srcs
 
 RUN npm install -g express-generator nodemon

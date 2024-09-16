@@ -1,6 +1,14 @@
 const sharp = require('sharp');
 const path = require('path');
 
+async function ensureIsLogged(page) {
+   const loggedIn = await page.evaluate(() => {
+       return (document.querySelector('p.selectable-text.copyable-text.x15bjb6t.x1n2onr6') !== null)
+   });
+   if (!loggedIn)
+       throw new error("Session WhatsApp expirée");
+}
+
 function findRigntSpan(contact, span) {
         const spans = document.querySelectorAll(span);
         for (const span of spans) {
@@ -69,5 +77,5 @@ module.exports = {
     waitForQRCodeScan,
     screenshot,
     timeOutFunction,
-    findRigntSpan
+    ensureIsLogged,
 };

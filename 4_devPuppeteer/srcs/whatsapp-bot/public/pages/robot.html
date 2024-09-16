@@ -126,7 +126,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>robot is lauch</h1>
+    <h1>robot is launch</h1>
     <form id="contact-form" action="/bot/about/scrape/what/launch" method="GET">
         <div class="input-group">
             <input type="text" id="contact" name="contact" value="" placeholder="Entrez le nom du contact" required>
@@ -136,8 +136,7 @@
         </div>
         <button class="button" type="submit" id="submit-btn">Envoyer</button>
     </form>
-    <img class="screenshot" src="/images/windowScreenshotbeforeRefresh.png" alt="WhatsApp Web Screenshot">
-    <img class="screenshot" src="/images/windowScreenshotRefresh.png" alt="WhatsApp Web Screenshot">
+    <img class="screenshot" id="refreshScreenshot" src="/images/windowScreenshotRefresh.png" alt="WhatsApp Web Screenshot" style="display: none;">
     <img class="screenshot" src="/images/windowScreenshotSelection.png" alt="WhatsApp Web Screenshot">
     <img class="screenshot" src="/images/windowScreenshotType.png" alt="WhatsApp Web Screenshot">
     <img class="screenshot" src="/images/windowScreenshotEnter.png" alt="WhatsApp Web Screenshot">
@@ -155,10 +154,14 @@
 
         window.location.href = newUrl;
     });
+    const image = document.getElementById('refreshScreenshot');
+    image.onerror = function() {
+        this.style.display = 'none';
+    };
+    image.onload = function () {
+        this.style.display = 'block'
+    };
 
-    function submitInformations() {
-
-    }
     function reloadPage() {
         location.reload();
     }
