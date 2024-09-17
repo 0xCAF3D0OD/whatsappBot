@@ -1,5 +1,6 @@
 const path = require('path');
 const { timeOutFunction, screenshot } = require('./botUtils.js');
+const fs = require('fs/promises');
 
 let currentContact = null;
 let lastNotificationCount = 0;
@@ -8,6 +9,9 @@ module.exports = (bot, getPage) => {
     bot.get('/about/scrape/what', async (req, res) => {
         try {
             let page = getPage();
+            const cookiesString = await fs.readFile('./cookies.json');
+            const cookies = JSON.parse(cookiesString.toString());
+            await page.setCookie(...cookies);
             console.log("we are on the page !");
             const screenshotPath = path.join(__dirname, '../..', 'public/images', 'windowScreenshot.png');
             await page.screenshot({ path: screenshotPath, fullpage: true })

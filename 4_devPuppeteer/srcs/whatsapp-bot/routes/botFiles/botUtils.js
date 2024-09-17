@@ -1,21 +1,13 @@
 const sharp = require('sharp');
 const path = require('path');
+const fs = require('fs/promises');
 
 async function ensureIsLogged(page) {
    const loggedIn = await page.evaluate(() => {
        return (document.querySelector('p.selectable-text.copyable-text.x15bjb6t.x1n2onr6') !== null)
    });
    if (!loggedIn)
-       throw new error("Session WhatsApp expirée");
-}
-
-function findRigntSpan(contact, span) {
-        const spans = document.querySelectorAll(span);
-        for (const span of spans) {
-            if (span.textContent.trim() === contact)
-                return span
-        }
-        return null;
+       throw new error("Session WhatsApp expirée!");
 }
 
 async function screenshot(page, name) {
@@ -65,6 +57,10 @@ async function waitForQRCodeScan(page) {
 
     if (discussion === 'Discussions' || discussion === 'Chats') {
         console.log("QR Code scanné avec succès ! " + discussion);
+        const localStorage = await page.evaluate(() =>  Object.assign({}, window.localStorage));
+        const localStorageStringData = JSON.stringify(localStorage);
+        await fs.writeFile('./public/cookies/localDataStorage.json', localStorageStringData, 'utf8');
+        console.log('local storage is saved.');
         return true;
     } else {
         console.log("L'élément est apparu mais le texte ne correspond pas à 'Discussions' -> " + discussion);

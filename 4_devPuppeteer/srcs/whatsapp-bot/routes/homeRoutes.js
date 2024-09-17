@@ -10,7 +10,6 @@ const messageRoutes = require('./botFiles/messageRoutes');
 // Création du routeur
 const bot = express.Router();
 
-
 // Définition des routes sur le routeur
 bot.get('/', (req, res) => {
     res.send(`

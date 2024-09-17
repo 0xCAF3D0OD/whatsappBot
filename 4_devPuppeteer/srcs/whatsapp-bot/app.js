@@ -23,11 +23,16 @@ app.use((req, res, next) => {
 });
 
 const bot = require('./routes/homeRoutes');
-
 app.use("/bot", bot);
+
+
+const testBot = require('./routes/testBot');
+app.use("/testBot", testBot);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
