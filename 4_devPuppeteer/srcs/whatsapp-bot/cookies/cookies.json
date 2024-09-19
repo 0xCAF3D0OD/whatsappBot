@@ -1,0 +1,16 @@
+[
+	{
+		"name": "wa_web_lang_pref",
+		"value": "en_GB",
+		"domain": ".web.whatsapp.com",
+		"path": "/",
+		"expires": 1729186043,
+		"size": 21,
+		"httpOnly": false,
+		"secure": true,
+		"session": false,
+		"priority": "Medium",
+		"sameParty": false,
+		"sourceScheme": "Secure"
+	}
+]

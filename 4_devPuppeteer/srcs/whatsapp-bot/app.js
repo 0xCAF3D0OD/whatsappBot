@@ -3,16 +3,22 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var config = require('./config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'public')));
+global.rootDir = config.rootDir;
+global.publicDir = config.publicDir;
+global.cookiesDir = config.cookiesDir;
 
-const ignoredPaths = ['/favicon/1x/favicon/', '/favicon/2x/favicon/', '/sw.js'];
+app.use(express.static(publicDir));
+
+const ignoredPaths = ['/favicon/1x/favicon/', '/favicon/2x/favicon/', '/sw.js', '/favicon.ico'];
+
+
 
 // Middleware pour ignorer certaines requêtes
 app.use((req, res, next) => {
@@ -27,6 +33,7 @@ app.use("/bot", bot);
 
 
 const testBot = require('./routes/testBot');
+const {rootDir} = require("./config");
 app.use("/testBot", testBot);
 
 

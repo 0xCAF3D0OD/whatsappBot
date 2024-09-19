@@ -2,6 +2,9 @@ const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs/promises');
 
+const puppeteer = require('puppeteer');
+const config = require("../../config");
+
 async function ensureIsLogged(page) {
    const loggedIn = await page.evaluate(() => {
        return (document.querySelector('p.selectable-text.copyable-text.x15bjb6t.x1n2onr6') !== null)
@@ -57,15 +60,55 @@ async function waitForQRCodeScan(page) {
 
     if (discussion === 'Discussions' || discussion === 'Chats') {
         console.log("QR Code scanné avec succès ! " + discussion);
-        const localStorage = await page.evaluate(() =>  Object.assign({}, window.localStorage));
-        const localStorageStringData = JSON.stringify(localStorage);
-        await fs.writeFile('./public/cookies/localDataStorage.json', localStorageStringData, 'utf8');
-        console.log('local storage is saved.');
+
+        // const localStorageKeys = await page.evaluate(() => {
+        //     const targetKeys = [
+        //         "Session",
+        //         "WANoiseInfo",
+        //         "WANoiseInfoIv",
+        //         "WAWebEncKeySalt",
+        //         "WALid",
+        //         "WARoutingInfo",
+        //         "WAMms4Conn",
+        //         "WAWebTimeSpentSession",
+        //         "WAUnknownID",
+        //         "last-wid-md"
+        //     ];
+        //     let result = {};
+        //     for ( const keys of targetKeys)
+        //         result[keys] = window.localStorage.getItem(keys);
+        //     return result;
+        // });
+        //
+        // await fs.writeFile('./public/cookies/localDataStorage.json', JSON.stringify(localStorageKeys, null, "\t"), 'utf8');
+
+            /*Your login code*/
+
+        // const cookies = JSON.stringify(await page.cookies());
+        // const sessionStorage = await page.evaluate(() =>JSON.stringify(sessionStorage));
+        // const localStorage = await page.evaluate(() => JSON.stringify(localStorage));
+        //
+        // await fs.writeFile("./cookies.json", JSON.stringify(cookies, null, "\t"), 'utf8');
+        // await fs.writeFile("./sessionStorage.json",  JSON.stringify(sessionStorage, null, "\t"), 'utf8');
+        // await fs.writeFile("./localStorage.json", JSON.stringify(localStorage, null, "\t"), 'utf8');
+
         return true;
     } else {
         console.log("L'élément est apparu mais le texte ne correspond pas à 'Discussions' -> " + discussion);
         return false;
     }
+}
+
+async function saveSession(page) {
+    const cookies = await page.cookies();
+    const localStorage = await page.evaluate(() => Object.assign({}, localStorage));
+    const sessionStorage = await page.evaluate(() => Object.assign({}, sessionStorage));
+
+    console.log(path.join(config.cookiesDir, "cookies.json"));
+    await fs.writeFile(path.join(config.cookiesDir, "cookies.json"), JSON.stringify(cookies, null, "\t"));
+    await fs.writeFile(path.join(config.cookiesDir, "localStorage.json"), JSON.stringify(localStorage, null, "\t"));
+    await fs.writeFile(path.join(config.cookiesDir, "sessionStorage.json"), JSON.stringify(sessionStorage, null, "\t"));
+    console.log('Session sauvegardée');
 }
 
 module.exports = {
@@ -74,4 +117,5 @@ module.exports = {
     screenshot,
     timeOutFunction,
     ensureIsLogged,
+    saveSession,
 };
