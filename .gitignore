@@ -1,10 +1,9 @@
 .idea/
-.DStore/
+.DS_Store
 1_trash/
 .env
 node_modules
 archives/
-windowScreenshot.png
+*.png
 images/
-package.json
-package-lock.json
+*.json

@@ -1,11 +1,10 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
-const fs = require('fs/promises');
-const { screenshot, timeOutFunction, waitForQRCodeScan, saveSession,
-    printLocalStorage, readDataCookies, evaluateDataSession} = require('./botFiles/testBotUtils')
 const path = require("path");
 const config = require('../config');
 
+const { screenshot, timeOutFunction, waitForQRCodeScan, saveSession,
+    printLocalStorage, readDataCookies, evaluateDataSession} = require('./botFiles/testBotUtils')
 
 const testBot = express.Router();
 
