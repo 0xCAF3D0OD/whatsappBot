@@ -27,7 +27,7 @@ echo "cd $WHATSAPP_BOT_DIR"
 cd "$WHATSAPP_BOT_DIR"
 
 echo "install dependency"
-npm install puppeteer
+npm install puppeteer http-error express cookie-parser morgan
 npm install --arch=arm64 --platform=linuxmusl sharp
 
 PUPPETEER_VERSION=$(npm list puppeteer)
