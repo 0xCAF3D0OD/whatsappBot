@@ -60,38 +60,6 @@ async function waitForQRCodeScan(page) {
 
     if (discussion === 'Discussions' || discussion === 'Chats') {
         console.log("QR Code scanné avec succès ! " + discussion);
-
-        // const localStorageKeys = await page.evaluate(() => {
-        //     const targetKeys = [
-        //         "Session",
-        //         "WANoiseInfo",
-        //         "WANoiseInfoIv",
-        //         "WAWebEncKeySalt",
-        //         "WALid",
-        //         "WARoutingInfo",
-        //         "WAMms4Conn",
-        //         "WAWebTimeSpentSession",
-        //         "WAUnknownID",
-        //         "last-wid-md"
-        //     ];
-        //     let result = {};
-        //     for ( const keys of targetKeys)
-        //         result[keys] = window.localStorage.getItem(keys);
-        //     return result;
-        // });
-        //
-        // await fs.writeFile('./public/cookies/localDataStorage.json', JSON.stringify(localStorageKeys, null, "\t"), 'utf8');
-
-            /*Your login code*/
-
-        // const cookies = JSON.stringify(await page.cookies());
-        // const sessionStorage = await page.evaluate(() =>JSON.stringify(sessionStorage));
-        // const localStorage = await page.evaluate(() => JSON.stringify(localStorage));
-        //
-        // await fs.writeFile("./cookies.json", JSON.stringify(cookies, null, "\t"), 'utf8');
-        // await fs.writeFile("./sessionStorage.json",  JSON.stringify(sessionStorage, null, "\t"), 'utf8');
-        // await fs.writeFile("./localStorage.json", JSON.stringify(localStorage, null, "\t"), 'utf8');
-
         return true;
     } else {
         console.log("L'élément est apparu mais le texte ne correspond pas à 'Discussions' -> " + discussion);

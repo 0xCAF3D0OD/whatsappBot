@@ -1,71 +1,96 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require("path");
+const fs = require('fs/promises');
 const config = require('../config');
 
 const { screenshot, timeOutFunction, waitForQRCodeScan, saveSession,
-    printLocalStorage, readDataCookies, evaluateDataSession} = require('./botFiles/testBotUtils')
+    printLocalStorage, readDataCookies, evaluateDataSession,
+    testLocalStorage } = require('./botFiles/testBotUtils')
 
 const testBot = express.Router();
 
-testBot.get('/', async (req, res) => {
-    const selectorQrCode = '#app > div > div.landing-wrapper > div.landing-window > div.landing-main > div > div > div._ak96 > div > canvas';
-    const browser = await puppeteer.launch({
+let browser;
+let whatsappPage;
+
+// Fonction d'initialisation
+async function initializeBrowser() {
+    browser = await puppeteer.launch({
         executablePath: '/opt/google/chrome/chrome',
         headless: 'false',
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
+    whatsappPage = await browser.newPage();
+    await whatsappPage.goto('https://web.whatsapp.com/');
+}
 
-    const page = await browser.newPage();
+// Appelez cette fonction au démarrage
+initializeBrowser();
 
-    await page.goto('https://web.whatsapp.com/')
-        .then(() => screenshot(page, 'whatsapp'))
-        .then(() => timeOutFunction(page, 2000));
+testBot.get('/', async (req, res) => {
+    const selectorQrCode = '#app > div > div.landing-wrapper > ' +
+        'div.landing-window > div.landing-main > div > div > div._ak96 > div > canvas';
+    await whatsappPage.bringToFront();
+    await whatsappPage.goto('https://web.whatsapp.com/')
+        .then(() => timeOutFunction(whatsappPage, 4000))
+        .then(() => screenshot(whatsappPage, 'whatsapp'));
 
-    await page.waitForSelector(selectorQrCode, {timeout: 2000});
+    await testLocalStorage(whatsappPage, 'testBot');
 
-    const qrCodeElement = await page.$(selectorQrCode);
-    await qrCodeElement.screenshot({
-        path: './public/images/qrCode.png'
-    })
 
-    res.sendFile(path.join(config.pagesDir, 'qrcode-template.html'));
+    await whatsappPage.waitForSelector(selectorQrCode, {timeout: 4000});
+    const qrCodePath = path.join(config.imageDir, 'qrCode.png');
+    try {
+        const qrCodeElement = await whatsappPage.$(selectorQrCode);
+        await qrCodeElement.screenshot({path: path.join(config.imageDir, 'qrCode.png')});
 
-    await waitForQRCodeScan(page);
-    await saveSession(page)
-        .then(() => timeOutFunction(page, 5000))
-        .then(() => screenshot(page, 'reload'));
+        res.sendFile(path.join(config.pagesDir, 'qrcode-template.html'));
 
+        await waitForQRCodeScan(whatsappPage);
+
+        await saveSession(whatsappPage, qrCodePath)
+            .then(() => console.log('saveSession'))
+            .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
+    } catch(error) {
+        console.error(`Error: Scanning qr code failed ${error}`);
+        res.status(404).send(`Error: Scanning qr code failed ${error}`);
+    }
     await browser.close();
 })
 
 testBot.get('/run-script', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({
-            executablePath: '/opt/google/chrome/chrome',
-            headless: 'false',
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        });
-        const page = await browser.newPage();
+        const newWhatsappPage = await browser.newPage();
+        await newWhatsappPage.goto('https://web.whatsapp.com/');
 
-        await page.goto('https://web.whatsapp.com/');
+        const cookies = await readDataCookies(path.join(config.cookiesDir, "cookies.json"));
+        const sessionStorage = await readDataCookies(path.join(config.cookiesDir, "sessionStorage.json"));
+        const localStorage = await readDataCookies(path.join(config.cookiesDir, "localStorage.json"));
 
-        const cookies = await readDataCookies(path.join(config.cookiesDir, "cookies.json"), 'cookies');
-        const sessionStorage = await readDataCookies(path.join(config.cookiesDir, "sessionStorage.json"), 'sessionStorage');
-        const localStorage = await readDataCookies(path.join(config.cookiesDir, "localStorage.json"), 'localStorage');
+        await newWhatsappPage.setCookie(...cookies);
 
-        await page.setCookie(...cookies);
+        await evaluateDataSession(newWhatsappPage, sessionStorage);
+        await evaluateDataSession(newWhatsappPage, localStorage);
 
-        await evaluateDataSession(page, sessionStorage);
-        await evaluateDataSession(page, localStorage);
+        await testLocalStorage(newWhatsappPage, 'testLocalStorage-end.json');
 
-        await printLocalStorage(page);
-        await timeOutFunction(page, 5000);
-        await screenshot(page, 'reload');
+        await timeOutFunction(newWhatsappPage, 15000);
+        await screenshot(newWhatsappPage, 'reload');
+
+        const isLoggedIn = await checkIfLoggedIn(newWhatsappPage);
+        console.log(`user is logged in: ${isLoggedIn}`);
+        await newWhatsappPage.close();
 
     } catch (error) {
         console.error('Une erreur est survenue :', error);
     }
 });
 
+async function checkIfLoggedIn(newPage) {
+    return(await newPage.evaluate(() => {
+        const selectorQrCode = '#app > div > div.landing-wrapper > div.landing-window > ' +
+            'div.landing-main > div > div > div._ak96 > div > canvas';
+        return !!document.querySelector(selectorQrCode)
+    }))
+}
 module.exports = testBot;

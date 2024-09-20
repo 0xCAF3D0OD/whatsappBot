@@ -18,8 +18,6 @@ app.use(express.static(publicDir));
 
 const ignoredPaths = ['/favicon/1x/favicon/', '/favicon/2x/favicon/', '/sw.js', '/favicon.ico'];
 
-
-
 // Middleware pour ignorer certaines requêtes
 app.use((req, res, next) => {
   if (ignoredPaths.includes(req.path)) {
