@@ -43,7 +43,7 @@ async function generateQRCode(page) {
         input: logoSVGBuffer,
         gravity: 'center',
         blend: 'over'
-    }]).toFile(path.join(__dirname, '../..', 'public/images', 'qrCode.png'));
+    }]).toFile(path.join(__dirname, '../..', 'public/images', '1_qrCode.png'));
 
     console.log('QR Code avec logo sauvegardé comme qrCode.png');
 }

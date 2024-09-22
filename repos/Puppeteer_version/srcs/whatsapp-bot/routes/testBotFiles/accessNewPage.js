@@ -30,22 +30,6 @@ async function enterInNewPage(newWhatsappPage) {
         await timeOutFunction(newWhatsappPage, 5000);
         await screenshot(newWhatsappPage, '5_ACCEPTPageSet');
     }
-    // await newWhatsappPage.evaluate(() => {
-    //     const AccepteButton = Array.from(document.querySelectorAll('button')).find(btn =>
-    //         btn.textContent.trim() === 'ACCEPT'
-    //     );
-    //     AccepteButton.click();
-    // });
-    //
-    // await timeOutFunction(newWhatsappPage, 5000);
-    // await screenshot(newWhatsappPage, 'newPageSet');
-
-    // await newWhatsappPage.click(UseHereButton);
-    // await timeOutFunction(newWhatsappPage, 3);
-
-    // await newWhatsappPage.waitForSelector(selectorSearchInput);
-    // await newWhatsappPage.click(acceptButton);
-    // await screenshot(newWhatsappPage, 'newPageSet');
 }
 
 module.exports = {

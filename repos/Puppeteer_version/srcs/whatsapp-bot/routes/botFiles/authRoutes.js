@@ -11,7 +11,7 @@ module.exports = (bot, getPage) => {
         try {
             page = getPage();
             console.log("Chargement de la page...");
-            await page.waitForSelector(selector, { timeout: 6000 });
+            await page.waitForSelector(selector, { timeout: 120000 });
             console.log("Page chargée avec succès");
 
             await generateQRCode(page);

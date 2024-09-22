@@ -5,7 +5,7 @@ const config = require("../../config");
 function logs(title) {
     console.log(`- LOGS: ${title}`);
 }
-async function testLocalStorage(file, fileName) {
+async function testLocalStorage(file, fileName, dataName) {
     const localStorage = await file.evaluate(() => Object.assign({}, localStorage));
     await fs.writeFile(path.join(config.cookiesDir, fileName), JSON.stringify(localStorage, null, "\t"))
 }

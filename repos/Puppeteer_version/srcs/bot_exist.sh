@@ -1,21 +1,6 @@
 #!/bin/bash
 WHATSAPP_BOT_DIR=$(pwd)/whatsapp-bot
 
-if command -v micro >/dev/null 2>&1; then
-  echo "Micro is already installed"
-  micro --version
-else
-  echo "installation of micro"
-  curl https://getmic.ro | bash && \
-  mv micro /usr/bin
-  if [ $? -eq 0 ]; then
-    echo "Micro is installed"
-    micro --version
-  else
-    echo "micro installation failed"
-  fi
-fi
-
 if [ ! -d "$WHATSAPP_BOT_DIR" ]; then
   echo "folder don't exist process create"
   npx express-generator -f /app/srcs/whatsapp-bot;
