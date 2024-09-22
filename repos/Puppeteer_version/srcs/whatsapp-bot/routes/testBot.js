@@ -2,11 +2,11 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require("path");
 const fs = require('fs/promises');
-const config = require('../config');
 
-const { screenshot, timeOutFunction, waitForQRCodeScan, saveSession,
-    printLocalStorage, readDataCookies, evaluateDataSession,
-    testLocalStorage } = require('./botFiles/testBotUtils')
+const config = require('../config');
+const { waitForQRCodeScan } = require('./testBotFiles/qrCodeSession');
+const { saveSession, readDataCookies, evaluateDataSession, } = require('./testBotFiles/cookiesSession');
+const { screenshot, timeOutFunction, testLocalStorage } = require('./testBotFiles/testBotUtils');
 
 const testBot = express.Router();
 
@@ -24,18 +24,14 @@ async function initializeBrowser() {
     await whatsappPage.goto('https://web.whatsapp.com/');
 }
 
-// Appelez cette fonction au démarrage
-initializeBrowser();
-
 testBot.get('/', async (req, res) => {
     const selectorQrCode = '#app > div > div.landing-wrapper > ' +
         'div.landing-window > div.landing-main > div > div > div._ak96 > div > canvas';
+    await initializeBrowser();
     await whatsappPage.bringToFront();
     await whatsappPage.goto('https://web.whatsapp.com/')
         .then(() => timeOutFunction(whatsappPage, 4000))
         .then(() => screenshot(whatsappPage, 'whatsapp'));
-
-    await testLocalStorage(whatsappPage, 'testBot');
 
 
     await whatsappPage.waitForSelector(selectorQrCode, {timeout: 4000});
@@ -47,7 +43,6 @@ testBot.get('/', async (req, res) => {
         res.sendFile(path.join(config.pagesDir, 'qrcode-template.html'));
 
         await waitForQRCodeScan(whatsappPage);
-
         await saveSession(whatsappPage, qrCodePath)
             .then(() => console.log('saveSession'))
             .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
@@ -60,22 +55,26 @@ testBot.get('/', async (req, res) => {
 
 testBot.get('/run-script', async (req, res) => {
     try {
+        await initializeBrowser();
         const newWhatsappPage = await browser.newPage();
+
+        await newWhatsappPage.evaluateOnNewDocument(() => {
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            //readeFile local session and cookies
+            const cookies = readDataCookies(path.join(config.cookiesDir, "cookies.json"));
+            const sessionStorageVar = readDataCookies(path.join(config.cookiesDir, "sessionStorage.json"));
+            const localStorageVar = readDataCookies(path.join(config.cookiesDir, "localStorage.json"));
+
+            newWhatsappPage.setCookie(...cookies);
+            //setItem local session and cookies
+            evaluateDataSession(newWhatsappPage, sessionStorageVar);
+            evaluateDataSession(newWhatsappPage, localStorageVar);
+
+            console.log('test2');
+            testLocalStorage(newWhatsappPage, 'testLocalStorage-end.json');
+        });
         await newWhatsappPage.goto('https://web.whatsapp.com/');
-
-        const cookies = await readDataCookies(path.join(config.cookiesDir, "cookies.json"));
-        const sessionStorage = await readDataCookies(path.join(config.cookiesDir, "sessionStorage.json"));
-        const localStorage = await readDataCookies(path.join(config.cookiesDir, "localStorage.json"));
-
-        await newWhatsappPage.setCookie(...cookies);
-
-        await evaluateDataSession(newWhatsappPage, sessionStorage);
-        await evaluateDataSession(newWhatsappPage, localStorage);
-
-        await testLocalStorage(newWhatsappPage, 'testLocalStorage-end.json');
-
-        await timeOutFunction(newWhatsappPage, 15000);
-        await screenshot(newWhatsappPage, 'reload');
 
         const isLoggedIn = await checkIfLoggedIn(newWhatsappPage);
         console.log(`user is logged in: ${isLoggedIn}`);
@@ -87,6 +86,8 @@ testBot.get('/run-script', async (req, res) => {
 });
 
 async function checkIfLoggedIn(newPage) {
+    await timeOutFunction(newPage, 15000);
+    await screenshot(newPage, 'reload');
     return(await newPage.evaluate(() => {
         const selectorQrCode = '#app > div > div.landing-wrapper > div.landing-window > ' +
             'div.landing-main > div > div > div._ak96 > div > canvas';
