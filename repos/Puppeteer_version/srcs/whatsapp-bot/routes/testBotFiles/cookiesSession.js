@@ -1,12 +1,13 @@
 const path = require('path');
 const fs = require('fs/promises');
 const config = require("../../config");
+const { logs } = require('./testBotUtils');
 
-const { testLocalStorage, printLocalStorage } = require('./testBotUtils');
+const { testLocalStorage, printLocalStorage, timeOutFunction } = require('./testBotUtils');
 
 async function saveSession(page, qrCodePath) {
     await printLocalStorage(page);
-    console.log('sauvegarde de la Session ');
+    logs('sauvegarde de la Session ');
 
     const cookies = await page.cookies();
     const localStorage = await page.evaluate(() => Object.assign({}, localStorage));
@@ -21,7 +22,6 @@ async function saveSession(page, qrCodePath) {
             .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
         await fs.writeFile(path.join(config.cookiesDir, "sessionStorage.json"), JSON.stringify(sessionStorage, null, "\t"))
             .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
-        console.log('Session sauvegardée');
     } catch (error) {
         console.error(`Error the session hasn't been saved ${error}`);
     }
@@ -38,12 +38,22 @@ async function evaluateDataSession(page, dataName) {
             window.localStorage.setItem(key, data[key]);
         });
     }, dataName);
-    console.log('test1');
-    await printLocalStorage(page, dataName);
+}
+async function setStorageDatas(page, sessionStorage, localStorage) {
+    await page.evaluate((sessionStorageData, localStorageData) => {
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+    });
+    //setItem local session and cookies
+    await evaluateDataSession(page, sessionStorage);
+    await evaluateDataSession(page, localStorage);
+    // await testLocalStorage(page, 'testLocalStorage-end.json')
+    //     .then(() => timeOutFunction(page, 3000));
+    return('evaluateOnNewDocument executed successfully');
 }
 
 module.exports = {
     saveSession,
     readDataCookies,
-    evaluateDataSession,
+    setStorageDatas,
 }

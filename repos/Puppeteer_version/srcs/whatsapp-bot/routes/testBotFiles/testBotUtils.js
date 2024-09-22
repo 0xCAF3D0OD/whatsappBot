@@ -2,6 +2,9 @@ const path = require('path');
 const fs = require('fs/promises');
 const config = require("../../config");
 
+function logs(title) {
+    console.log(`- LOGS: ${title}`);
+}
 async function testLocalStorage(file, fileName) {
     const localStorage = await file.evaluate(() => Object.assign({}, localStorage));
     await fs.writeFile(path.join(config.cookiesDir, fileName), JSON.stringify(localStorage, null, "\t"))
@@ -9,21 +12,11 @@ async function testLocalStorage(file, fileName) {
 async function screenshot(page, name) {
     name = path.join(__dirname, '../..', 'public/images', `${name}.png`);
     await page.screenshot({ path: name, fullpage: true });
-}
-
-async function setIntervalScreenshot(page, selectorQrCode, interval) {
-    setInterval(async () => {
-        try {
-            const qrCodeElement = await page.$(selectorQrCode);
-            await qrCodeElement.screenshot({path: path.join(config.imageDir, 'qrCode.png')});
-        } catch (error) {
-            console.error(`Error: Scanning qr code failed ${error}`);
-        }
-    }, interval);
+    await timeOutFunction(page, 1500);
 }
 
 async function timeOutFunction(page, time) {
-    console.log("wait a sec");
+    console.log(`- LOGS: Timeout ${time}`);
     await page.evaluate((time) => {
         return new Promise(resolve => setTimeout(resolve, time));
     }, time);
@@ -52,10 +45,31 @@ async function printLocalStorage(page) {
     return localStorageKeys
 }
 
+async function returnSelector(page, title) {
+    return(await page.evaluate((nameButton) => {
+        console.log('evaluate');
+        const button = Array.from(document.querySelectorAll('button')).find(btn =>
+            btn.textContent.trim() === nameButton
+        );
+        if (button) {
+            // Générer un sélecteur unique pour le bouton
+            let selector = button.id ? `#${button.id}` : button.className ? `.${button.className.split(' ').join('.')}` : '';
+            if (!selector) {
+                // Si pas d'ID ni de classe, utiliser un sélecteur plus complexe
+                const index = Array.from(button.parentNode.children).indexOf(button);
+                selector = `${button.tagName.toLowerCase()}:nth-child(${index + 1})`;
+            }
+            return selector;
+        }
+        return null;
+    }, title));
+}
+
 module.exports = {
     screenshot,
     timeOutFunction,
     printLocalStorage,
-    setIntervalScreenshot,
     testLocalStorage,
+    returnSelector,
+    logs,
 };
