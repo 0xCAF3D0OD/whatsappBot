@@ -3,22 +3,33 @@ const fs = require('fs/promises');
 const config = require("../../config");
 
 const { logs, screenshot} = require('./testBotUtils');
-const { testLocalStorage, printLocalStorage, timeOutFunction } = require('./testBotUtils');
+const { timeOutFunction } = require('./testBotUtils');
 
+let lastSavedCookies = null;
+let lastLocalStorage = null;
 async function saveSession(page, qrCodePath) {
     logs('sauvegarde de la Session ');
 
     const cookies = await page.cookies();
     const localStorage = await page.evaluate(() => Object.assign({}, localStorage));
 
-    try {
-        await fs.writeFile(path.join(config.cookiesDir, "cookies.json"), JSON.stringify(cookies, null, "\t"))
-            .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
-        await fs.writeFile(path.join(config.cookiesDir, "localStorage.json"), JSON.stringify(localStorage, null, "\t"))
-            .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
-    } catch (error) {
-        console.error(`Error the session hasn't been saved ${error}`);
+    if (JSON.stringify(cookies) !== JSON.stringify(lastSavedCookies) ||
+        JSON.stringify(localStorage) !== JSON.stringify(lastLocalStorage)) {
+        logs('Changements détectés, sauvegarde de la session');
+        await timeOutFunction(page, 2000);
+        try {
+            await fs.writeFile(path.join(config.cookiesDir, "cookies.json"), JSON.stringify(cookies, null, "\t"))
+                .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
+            await fs.writeFile(path.join(config.cookiesDir, "localStorage.json"), JSON.stringify(localStorage, null, "\t"))
+                .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
+            lastSavedCookies = cookies;
+            lastLocalStorage = localStorage;
+        } catch (error) {
+            console.error(`Error the session hasn't been saved ${error}`);
+        }
     }
+    else
+        logs('Aucun changement significatif, session non sauvegardée');
 }
 
 async function setupNewSession(page) {
@@ -29,13 +40,13 @@ async function setupNewSession(page) {
 
     await page.goto('https://web.whatsapp.com/')
         .then(() => timeOutFunction(page, 4000))
-        .then(() => screenshot(page, '2_whatsappWeb'));
+        .then(() => screenshot(page, '2_whatsappWebLoad'));
 
     await setStorageDatas(page, localStorageData);
 
     await page.reload()
-        .then(() => timeOutFunction(newWhatsappPage, 4000))
-        .then(() => screenshot(newWhatsappPage, '3_whatsappWeb'));
+        .then(() => timeOutFunction(page, 4000))
+        .then(() => screenshot(page, '3_whatsappWebReload'));
 
 }
 async function readDataCookies(file) {
@@ -57,6 +68,4 @@ async function setStorageDatas(page, localStorage) {
 module.exports = {
     saveSession,
     setupNewSession,
-    readDataCookies,
-    setStorageDatas,
 }

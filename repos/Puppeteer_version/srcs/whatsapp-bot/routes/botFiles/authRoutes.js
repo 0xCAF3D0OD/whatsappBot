@@ -25,7 +25,7 @@ module.exports = (bot, getPage) => {
                 }
             }).catch(console.error);
         } catch (error) {
-            console.error(`Erreur a propos de scrape: ${error.message}`);
+           console.error(`Erreur a propos de scrape: ${error.message}`);
         }
     });
 

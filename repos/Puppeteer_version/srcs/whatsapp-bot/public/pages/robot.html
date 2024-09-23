@@ -127,7 +127,7 @@
 <body>
 <div class="container">
     <h1>robot is launch</h1>
-    <form id="contact-form" action="/bot/about/scrape/what/launch" method="GET">
+    <form id="contact-form" action="/testBot/whatsapp/discussions" method="GET">
         <div class="input-group">
             <input type="text" id="contact" name="contact" value="" placeholder="Entrez le nom du contact" required>
         </div>
@@ -136,11 +136,11 @@
         </div>
         <button class="button" type="submit" id="submit-btn">Envoyer</button>
     </form>
-    <img class="screenshot" id="refreshScreenshot" src="/images/windowScreenshotRefresh.png" alt="WhatsApp Web Screenshot" style="display: none;">
-    <img class="screenshot" src="/images/windowScreenshotSelection.png" alt="WhatsApp Web Screenshot">
-    <img class="screenshot" src="/images/windowScreenshotType.png" alt="WhatsApp Web Screenshot">
-    <img class="screenshot" src="/images/windowScreenshotEnter.png" alt="WhatsApp Web Screenshot">
-    <img class="screenshot" src="/images/windowScreenshotSendMessage.png" alt="WhatsApp Web Screenshot">
+    <img class="screenshot" id="refreshScreenshot" src='/images/3"_windowScreenshotRefresh' alt="WhatsApp Web Screenshot" style="display: none;">
+    <img class="screenshot" src="/images/3_windowScreenshotSelection.png" alt="WhatsApp Web Screenshot">
+    <img class="screenshot" src="/images/4_windowScreenshotType.png" alt="WhatsApp Web Screenshot">
+    <img class="screenshot" src="/images/6_windowScreenshotTypeMessage.png" alt="WhatsApp Web Screenshot">
+    <img class="screenshot" src="/images/7_windowScreenshotSendMessage.png" alt="WhatsApp Web Screenshot">
 </div>
 <script>
 
@@ -149,10 +149,8 @@
         let newContact = document.getElementById('contact').value;
         let newMessage = document.getElementById('message').value;
 
-        let newUrl = '/bot/about/scrape/what/launch?contact=' + encodeURIComponent(newContact) +
+        window.location.href = '/testBot/whatsapp/discussions?contact=' + encodeURIComponent(newContact) +
             '&message=' + encodeURIComponent(newMessage);
-
-        window.location.href = newUrl;
     });
     const image = document.getElementById('refreshScreenshot');
     image.onerror = function() {
@@ -162,22 +160,6 @@
         this.style.display = 'block'
     };
 
-    function reloadPage() {
-        location.reload();
-    }
-    // function periodicCheck() {
-    //     checkNotifications();
-    //     setTimeout(periodicCheck, 10000);
-    // }
-    //
-    // // S'assurer que la fonction est appelée une fois que le DOM est chargé
-    // document.addEventListener('DOMContentLoaded', (event) => {
-    //     console.log('DOM fully loaded and parsed');
-    //     periodicCheck();
-    // });
-    // document.addEventListener('click', function () {
-    //     hasNewNotifications = false
-    // });
 </script>
 </body>
 </html>

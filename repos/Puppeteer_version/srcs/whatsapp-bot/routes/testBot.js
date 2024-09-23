@@ -5,55 +5,74 @@ const path = require("path");
 const config = require('../config');
 
 const { waitForQRCodeScan } = require('./testBotFiles/qrCodeSession');
-const { saveSession, readDataCookies, setStorageDatas, setupNewSession } = require('./testBotFiles/cookiesSession');
-const { screenshot, timeOutFunction, testLocalStorage, logs, printLocalStorage} = require('./testBotFiles/testBotUtils');
+const { saveSession, setupNewSession } = require('./testBotFiles/cookiesSession');
+const { screenshot, timeOutFunction, logs} = require('./testBotFiles/testBotUtils');
 const { enterInNewPage } = require('./testBotFiles/accessNewPage');
+const pageWhatsappSession = require('./testBotFiles/pageWhatsappSession');
+const browserState = require('./testBotFiles/browserState');
 
 const testBot = express.Router();
 
-let browser;
-let whatsappPage;
 let qrCodeScanned = false;
+
+process.on('SIGINT', async () => {
+    console.log('Received SIGINT. Closing browser and exiting...');
+    const browser = browserState.getBrowser();
+    if (browser) {
+        await browser.close();
+    }
+    process.exit();
+});
 
 // Fonction d'initialisation
 async function initializeBrowser() {
-    browser = await puppeteer.launch({
-        executablePath: '/opt/google/chrome/chrome',
-        headless: 'false',
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-    whatsappPage = await browser.newPage();
-    await whatsappPage.goto('https://web.whatsapp.com/');
+    let browser = browserState.getBrowser();
+    let whatsappPage = browserState.getWhatsappPage();
+
+    if (!browser || !browser.isConnected()) {
+        browser = await puppeteer.launch({
+            executablePath: '/opt/google/chrome/chrome',
+            headless: 'false',
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        browserState.setBrowser(browser);
+    }
+    if (!whatsappPage || whatsappPage.isClosed()) {
+        whatsappPage = await browser.newPage();
+        await whatsappPage.goto('https://web.whatsapp.com/', { timeout: 60000 })
+            .then(() => screenshot(whatsappPage, '0_whatsapp'));
+        browserState.setWhatsappPage(whatsappPage);
+    }
+    return whatsappPage;
 }
 
 testBot.get('/', async (req, res) => {
     const selectorQrCode = '#app > div > div.landing-wrapper > ' +
         'div.landing-window > div.landing-main > div > div > div._ak96 > div > canvas';
 
-    await initializeBrowser();
-    await whatsappPage.bringToFront();
-    await whatsappPage.goto('https://web.whatsapp.com/')
-        .then(() => timeOutFunction(whatsappPage, 2000))
-        .then(() => screenshot(whatsappPage, '0_whatsapp'));
+    const whatsappPageConnection =  await initializeBrowser();
+    await whatsappPageConnection.bringToFront();
 
-    await whatsappPage.waitForSelector(selectorQrCode, { timeout: 4000 })
+    await whatsappPageConnection.waitForSelector(selectorQrCode, { timeout: 60000 })
     const qrCodePath = path.join(config.imageDir, '1_qrCode.png');
     try {
-        const qrCodeElement = await whatsappPage.$(selectorQrCode);
+        const qrCodeElement = await whatsappPageConnection.$(selectorQrCode);
         await qrCodeElement.screenshot({path: path.join(config.imageDir, '1_qrCode.png')});
 
         res.sendFile(path.join(config.pagesDir, 'qrcode-template.html'));
 
-        qrCodeScanned = await waitForQRCodeScan(whatsappPage, qrCodeScanned);
-        await saveSession(whatsappPage, qrCodePath)
+        qrCodeScanned = await waitForQRCodeScan(whatsappPageConnection, qrCodeScanned);
+        await screenshot(whatsappPageConnection, 'qrCodeScanned');
+        await saveSession(whatsappPageConnection, qrCodePath)
             .then(() => logs('saveSession'))
             .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
-
+        await screenshot(whatsappPageConnection, 'sessionSaved');
     } catch(error) {
         console.error(`Error: Scanning qr code failed ${error}`);
         res.status(404).send(`Error: Scanning qr code failed ${error}`);
+        await browserState.getBrowser.close();
     }
-    await browser.close();
+    // await browser.close();
 })
 
 // Methode HTML pour l'obtention du status de whatsapp
@@ -61,10 +80,15 @@ testBot.get('/check_qr_code_status', async (req, res) => {
     res.json({ scanned: qrCodeScanned })
 })
 
+const getCurrentPage = () => browserState.getWhatsappPage();
+
+pageWhatsappSession(testBot, getCurrentPage);
+
 testBot.get('/newPage', async (req, res) => {
     try {
-        await initializeBrowser();
-        const newWhatsappPage = await browser.newPage();
+        const newWhatsappPage = await initializeBrowser();
+        await newWhatsappPage.bringToFront();
+        // const newWhatsappPage = await browser.newPage();
 
         await setupNewSession(newWhatsappPage);
 
