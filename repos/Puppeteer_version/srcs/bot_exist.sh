@@ -20,4 +20,4 @@ echo "Version de puppeteer : $PUPPETEER_VERSION"
 npm install
 
 echo "starting application with nodemon"
-DEBUG=whatsapp-bot:* nodemon --verbose ./bin/www
+DEBUG=whatsapp-bot:* nodemon --verbose --ignore 'cookies/*' ./bin/www

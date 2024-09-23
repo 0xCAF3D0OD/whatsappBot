@@ -3,8 +3,10 @@ const fs = require('fs/promises');
 const config = require("../../config");
 
 const { screenshot, timeOutFunction, returnSelector, logs } = require('./testBotUtils')
-async function enterInNewPage(newWhatsappPage) {
-   logs('enterInNewPage');
+async function enterInNewPage(newWhatsappPage, isLoggedIn) {
+    logs(`Success ${isLoggedIn}`);
+
+    logs('enterInNewPage');
     const selectorUseHere = '.x78zum5 .xuxw1ft button.x889kno';
     const buttonSelector = await returnSelector(newWhatsappPage, 'Use here');
 

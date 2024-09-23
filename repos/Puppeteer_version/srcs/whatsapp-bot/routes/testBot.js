@@ -30,13 +30,11 @@ testBot.get('/', async (req, res) => {
     const selectorQrCode = '#app > div > div.landing-wrapper > ' +
         'div.landing-window > div.landing-main > div > div > div._ak96 > div > canvas';
 
-
     await initializeBrowser();
     await whatsappPage.bringToFront();
     await whatsappPage.goto('https://web.whatsapp.com/')
         .then(() => timeOutFunction(whatsappPage, 2000))
         .then(() => screenshot(whatsappPage, '0_whatsapp'));
-
 
     await whatsappPage.waitForSelector(selectorQrCode, { timeout: 4000 })
     const qrCodePath = path.join(config.imageDir, '1_qrCode.png');
@@ -46,18 +44,10 @@ testBot.get('/', async (req, res) => {
 
         res.sendFile(path.join(config.pagesDir, 'qrcode-template.html'));
 
-        await waitForQRCodeScan(whatsappPage)
-            .then((scanned) => {
-                qrCodeScanned = scanned;
-                if (qrCodeScanned)
-                    logs(`Success: ${qrCodeScanned}`);
-                else
-                    console.error(`Error: ${qrCodeScanned}`);
-            });
-
-        // await saveSession(whatsappPage, qrCodePath)
-        //     .then(() => logs('saveSession'))
-        //     .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
+        qrCodeScanned = await waitForQRCodeScan(whatsappPage, qrCodeScanned);
+        await saveSession(whatsappPage, qrCodePath)
+            .then(() => logs('saveSession'))
+            .catch(error => console.error('Erreur lors de la sauvegarde de la session:', error));
 
     } catch(error) {
         console.error(`Error: Scanning qr code failed ${error}`);
@@ -71,7 +61,7 @@ testBot.get('/check_qr_code_status', async (req, res) => {
     res.json({ scanned: qrCodeScanned })
 })
 
-testBot.get('/run-script', async (req, res) => {
+testBot.get('/newPage', async (req, res) => {
     try {
         await initializeBrowser();
         const newWhatsappPage = await browser.newPage();
@@ -80,10 +70,8 @@ testBot.get('/run-script', async (req, res) => {
 
         await screenshot(newWhatsappPage, '3_whatsappWebReload');
         const isLoggedIn = await checkIfLoggedIn(newWhatsappPage);
-        if (isLoggedIn) {
-            logs(`Success ${isLoggedIn}`)
-            await enterInNewPage(newWhatsappPage);
-        }
+        if (isLoggedIn)
+            await enterInNewPage(newWhatsappPage, isLoggedIn);
         else
             logs(`failure ${isLoggedIn}`)
     } catch (error) {
