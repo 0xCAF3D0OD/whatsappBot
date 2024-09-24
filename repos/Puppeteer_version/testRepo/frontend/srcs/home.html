@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple-Style Home</title>
+  <link href="tailwind.css?v=" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen font-sans">
+<div x-data="{
+    message: 'Testing connection...',
+    showMenu: false,
+    currentTime: new Date().toLocaleTimeString(),
+    currentDate: new Date().toLocaleDateString()
+  }"
+     x-init="setInterval(() => currentTime = new Date().toLocaleTimeString(), 1000)"
+     class="container mx-auto px-4 py-8">
+
+<!--   Header-->
+  <header class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-light text-gray-800">Home</h1>
+    <button @click="showMenu = !showMenu" class="text-gray-600 hover:text-gray-800">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+  </header>
+
+  <!-- Date and Time -->
+  <div class="text-center mb-12">
+    <p class="text-5xl font-light text-gray-800" x-text="currentTime"></p>
+    <p class="text-xl text-gray-600 mt-2" x-text="currentDate"></p>
+  </div>
+
+  <!-- Connection Test -->
+  <div class="text-center mb-8">
+    <h2 class="text-2xl font-light text-gray-800 mb-4" x-text="message"></h2>
+    <button @click="testBackend" class="bg-gray-800 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition duration-300">
+      Test Backend Connection
+    </button>
+  </div>
+
+  <!-- Settings Menu -->
+  <div x-show="showMenu" @click.away="showMenu = false" class="fixed right-0 top-0 h-full w-64 bg-white shadow-lg p-6 transform transition-transform duration-300" :class="showMenu ? 'translate-x-0' : 'translate-x-full'">
+    <h3 class="text-xl font-semibold mb-4">Settings</h3>
+    <ul class="space-y-2">
+      <li><a href="#" class="text-gray-600 hover:text-gray-800">Profile</a></li>
+      <li><a href="#" class="text-gray-600 hover:text-gray-800">Preferences</a></li>
+      <li><a href="#" class="text-gray-600 hover:text-gray-800">Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function testBackend() {
+    fetch('http://localhost:3000/whatsappBot/api/test')
+            .then(response => response.json())
+            .then(data => {
+              document.querySelector('h2').textContent = data.message;
+            })
+            .catch(error => {
+              document.querySelector('h2').textContent = 'Error connecting to backend';
+              console.error('Error:', error);
+            });
+  }
+</script>
+</body>
+</html>
