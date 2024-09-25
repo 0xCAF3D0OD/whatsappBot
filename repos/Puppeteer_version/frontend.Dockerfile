@@ -4,7 +4,7 @@ LABEL authors="0xCAF3D0OD"
 WORKDIR /app/frontend
 
 # Copier les fichiers de dépendances
-COPY requirements-front.txt ./
+COPY dockers/requirements-front.txt ./
 
 # Installer Node.js, npm et les dépendances système
 RUN apk add --no-cache nodejs npm \
@@ -13,14 +13,15 @@ RUN apk add --no-cache nodejs npm \
 # Installer les dépendances npm
 RUN npm init -y && npm install && npm install -g bash
 
-RUN npm install -D tailwindcss \
-    npx tailwindcss init
-
 # Copier le reste des fichiers de l'application
-COPY . .
+COPY ./testRepo/frontend .
+
+RUN npm install -D tailwindcss && \
+    npx tailwindcss init && \
+    npx tailwindcss -i ./src/input.css -o ./src/tailwind.css
 
 # Copier la configuration Nginx
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY dockers/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 

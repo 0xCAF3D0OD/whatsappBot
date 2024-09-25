@@ -9,5 +9,5 @@ module.exports = {
     backDir,
     frontDir,
 
-    srcsDir: path.resolve(frontDir, 'srcs'),
+    srcsDir: path.resolve(frontDir, 'src'),
 }

@@ -3,7 +3,7 @@ version: '3'
 services:
   backend:
     build:
-      context: ./dockers
+      context: .
       dockerfile: backend.Dockerfile
     volumes:
       - ./testRepo/backend/:/app/backend
@@ -14,7 +14,7 @@ services:
 
   frontend:
     build:
-      context: ./dockers
+      context: .
       dockerfile: frontend.Dockerfile
     volumes:
       - ./testRepo/frontend:/app/frontend/
@@ -33,6 +33,6 @@ networks:
 #    build:
 #      context: .
 #    volumes:
-#      - ./srcs:/app/srcs
+#      - ./src:/app/src
 #    ports:
 #      - "3000:3000"

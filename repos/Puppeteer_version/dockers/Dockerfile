@@ -10,7 +10,7 @@ RUN echo "NGROK_AUTH_TOKEN: $NGROK_AUTH_TOKEN"
 
 WORKDIR /app
 
-COPY ./requirements.txt .
+COPY requirements.txt .
 
 RUN apt-get update && \
     apt-get install -y $(cat requirements.txt) && \
@@ -30,7 +30,7 @@ WORKDIR /app/srcs
 
 RUN npm install -g express-generator nodemon
 
-COPY ./srcs/bot_exist.sh /app/script/
+COPY ../srcs/bot_exist.sh /app/script/
 
 RUN chmod +x /app/script/bot_exist.sh
 

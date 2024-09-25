@@ -1,0 +1,16 @@
+body {
+	font-family: 'Inter', sans-serif;
+}
+.bg-custom {
+	background-color: #FFFFFF;
+}
+.text-custom {
+	color: #1A1A1A;
+}
+.button-custom {
+	background-color: #1A1A1A;
+	color: white;
+}
+.button-custom:hover {
+	background-color: #333333;
+}
