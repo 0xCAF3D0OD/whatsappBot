@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ${Footer()}
   `;
 
-    // // Initialiser Alpine.js si nécessaire
-    // if (typeof Alpine === 'function') {
-    //     Alpine.start();
-    // }
+    // Initialiser Alpine.js si nécessaire
+    if (typeof Alpine === 'function') {
+        Alpine.start();
+    }
  });

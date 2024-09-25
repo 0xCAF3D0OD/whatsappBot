@@ -47,26 +47,27 @@ export function CoverImage() {
 }
 
 export function ConnectionTest() {
-    function testBackend() {
-        fetch('http://localhost:3000/whatsappBot/api/test')
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('h3').textContent = data.message;
-            })
-            .catch(error => {
-                document.querySelector('h3').textContent = 'Error connecting to backend';
-                console.error('Error:', error);
-            });
-    }
-
     return `
-        <div class="text-center mb-16">
+        <div x-data="{
+            message: 'Testing connection...',
+            testBackend() {
+                fetch('http://localhost:3000/whatsappBot/api/test')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.message = data.message;
+                    })
+                    .catch(error => {
+                        this.message = 'Error connecting to backend';
+                        console.error('Error:', error);
+                    });
+            }
+        }" class="text-center mb-16">
           <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
-          <button @click="testBackend" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
+          <button @click="testBackend()" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
             Test Backend Connection
           </button>
         </div>
-  `;
+    `;
 }
 
 export function FeaturesGrid() {
