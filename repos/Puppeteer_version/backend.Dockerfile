@@ -16,7 +16,7 @@ RUN wget -O- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearm
 
 # Install Chrome.
 RUN apt-get update && apt-get -y install google-chrome-stable && \
-     apt-get clean && rm -rf /var/lib/apt/lists/* \
+     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g express-generator nodemon cors
 

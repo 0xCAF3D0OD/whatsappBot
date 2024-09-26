@@ -4,9 +4,9 @@ const whatsappBot = express.Router();
 
 const { screenshot, consoleLog } = require('./whatsappBotUtils/botPageUtils');
 
-// whatsappBot.get('/api/test', (req, res) => {
-//     res.json({ message: 'Hello from backend im the whatsapp bot!' });
-// })
+whatsappBot.get('/api/test', (req, res) => {
+    res.json({ message: 'Hello from backend im the whatsapp bot!' });
+})
 
 whatsappBot.get('/', async (req, res) => {
 
