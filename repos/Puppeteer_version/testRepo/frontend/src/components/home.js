@@ -6,7 +6,7 @@ import {
     ConnectionTest,
     FeaturesGrid,
     Footer,
-} from './HomePage.js';
+} from '../../controller/Home.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');

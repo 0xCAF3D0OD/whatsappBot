@@ -4,9 +4,9 @@ const whatsappBot = express.Router();
 
 const { screenshot, consoleLog } = require('./whatsappBotUtils/botPageUtils');
 
-whatsappBot.get('/api/test', (req, res) => {
-    res.json({ message: 'Hello from backend im the whatsapp bot!' });
-})
+// whatsappBot.get('/api/test', (req, res) => {
+//     res.json({ message: 'Hello from backend im the whatsapp bot!' });
+// })
 
 whatsappBot.get('/', async (req, res) => {
 
@@ -15,13 +15,13 @@ whatsappBot.get('/', async (req, res) => {
         headless: 'false',
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-
+    const selectorQrCode = 'div._ak96 canvas';
     const whatsappPage = await browser.newPage();
 
     consoleLog(whatsappPage, 'before goto');
     // Navigate the page to a URL.
     await whatsappPage.goto('https://web.whatsapp.com/');
-    await whatsappPage.waitForSelector('h1.x1qlqyl8', { timeout: 120000 });
+    await whatsappPage.waitForSelector(selectorQrCode, { timeout: 120000 });
     consoleLog(whatsappPage, 'after goto');
     await screenshot(whatsappPage, 'whatsapp');
     // // Set screen size.
