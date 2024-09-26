@@ -9,6 +9,7 @@ async function testLocalStorage(file, fileName, dataName) {
     const localStorage = await file.evaluate(() => Object.assign({}, localStorage));
     await fs.writeFile(path.join(config.cookiesDir, fileName), JSON.stringify(localStorage, null, "\t"))
 }
+
 async function screenshot(page, name) {
     name = path.join(__dirname, '../..', 'public/images', `${name}.png`);
     await page.screenshot({ path: name, fullpage: true });

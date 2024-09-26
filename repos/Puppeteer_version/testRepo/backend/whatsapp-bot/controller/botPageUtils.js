@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const config = require('../../pathConfig');
+const config = require('../pathConfig');
 
 function consoleLog(type, file, message) {
     if (type === 'json')

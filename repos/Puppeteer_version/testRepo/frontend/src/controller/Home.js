@@ -37,7 +37,7 @@ export function DateTimeDisplay() {
 export function CoverImage() {
     return `
         <div class="relative mb-16">
-          <img src="../../images/chatInterface.png"
+          <img src="../images/chatInterface.png"
                alt="Cover Image" class="w-full h-auto object-cover rounded-lg shadow-lg">
           <div class="absolute inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 rounded-lg">
             <h3 class="text-4xl font-bold">Let the chat Bot check your message</h3>

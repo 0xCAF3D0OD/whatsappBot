@@ -17,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // Configuration des routes
-const whatsappBot = require('./routes/whatsappBot');
+const whatsappBot = require('./routes/root');
 app.use("/whatsappBot", whatsappBot);
 
 // Middlewares
