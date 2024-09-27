@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>On Assemble Style Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Your App</title>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/pinecone-router@4.x.x/dist/router.min.js"></script>
-  <link rel="stylesheet" href="style/homePage.css">
+  <script type="module" src="components/index.js" defer></script>
 </head>
-
-<body class="bg-custom min-h-screen flex flex-col">
-  <div id="app"></div>
-  <script type="module" src="components/home.js"></script>
+<body x-data="app">
+<nav>
+  <a href="/" x-link>Home</a>
+  <a href="/whatsappBot" x-link>WhatsApp Bot</a>
+</nav>
+<div id="app"></div>
 </body>
-
 </html>

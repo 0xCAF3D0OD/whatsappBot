@@ -37,7 +37,7 @@ export function DateTimeDisplay() {
 export function CoverImage() {
     return `
         <div class="relative mb-16">
-          <img src="../images/chatInterface.png"
+          <img src="https://www.contus.com/blog/wp-content/uploads/2023/03/chat-user-interface-1024x535.png"
                alt="Cover Image" class="w-full h-auto object-cover rounded-lg shadow-lg">
           <div class="absolute inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 rounded-lg">
             <h3 class="text-4xl font-bold">Let the chat Bot check your message</h3>
@@ -55,6 +55,9 @@ export function ConnectionTest() {
                     .then(response => response.json())
                     .then(data => {
                         this.message = data.message;
+                        setTimeout(() => {
+                            Alpine.raw($router).navigate('/whatsappBot');
+                        }, 1000);
                     })
                     .catch(error => {
                         this.message = 'Error connecting to backend';
@@ -64,11 +67,35 @@ export function ConnectionTest() {
         }" class="text-center mb-16">
           <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
           <button @click="testBackend()" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
-            Test Backend Connection
+            Test redirection page
           </button>
         </div>
     `;
 }
+
+// export function ConnectionTest() {
+//     return `
+//         <div x-data="{
+//             message: 'Testing connection...',
+//             testBackend() {
+//                 fetch('http://localhost:3000/whatsappBot/api/test')
+//                     .then(response => response.json())
+//                     .then(data => {
+//                         this.message = data.message;
+//                     })
+//                     .catch(error => {
+//                         this.message = 'Error connecting to backend';
+//                         console.error('Error:', error);
+//                     });
+//             }
+//         }" class="text-center mb-16">
+//           <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
+//           <button @click="testBackend()" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
+//             Test Backend Connection
+//           </button>
+//         </div>
+//     `;
+// }
 
 export function FeaturesGrid() {
     return `
