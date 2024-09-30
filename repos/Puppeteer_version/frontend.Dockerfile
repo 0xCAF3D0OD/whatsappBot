@@ -16,7 +16,7 @@ RUN npm init -y && npm install && npm install -g bash
 # Copier le reste des fichiers de l'application
 COPY ./testRepo/frontend .
 
-RUN npm install -D tailwindcss && \
+RUN npm install -D tailwindcss alpinejs pinecone-router && \
     npx tailwindcss init && \
     npx tailwindcss -i ./src/input.css -o ./src/tailwind.css
 

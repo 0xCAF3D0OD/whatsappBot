@@ -1,13 +1,3 @@
-import {
-    Header,
-    WelcomeMessage,
-    DateTimeDisplay,
-    CoverImage,
-    ConnectionTest,
-    FeaturesGrid,
-    Footer,
-} from '../controller/Home.js';
-
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
     app.innerHTML = `
@@ -19,18 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }"
       x-init="setInterval(() => currentTime = new Date().toLocaleTimeString(), 1000)"
       class="container mx-auto px-4 py-8 flex-grow">
-      ${Header()}
-      ${WelcomeMessage()}
-      ${DateTimeDisplay()}
-      ${CoverImage()}
-      ${ConnectionTest()}
-      ${FeaturesGrid()}
+    <div x-data="header" x-html="template()"></div>
+    <div x-data="welcomeMessage" x-html="template()"></div>
+    <div x-data="DateTimeDisplay" x-html="template()"></div>
+    <div x-data="CoverImage" x-html="template()"></div>
+    <div x-data="ConnectionTest" x-html="template()"></div>
+    <div x-data="FeaturesGrid" x-html="template()"></div>
     </div>
-    ${Footer()}
+    <div x-data="Footer" x-html="template()"></div>
   `;
-
-    // Initialiser Alpine.js si nécessaire
-    if (typeof Alpine === 'function') {
-        Alpine.start();
-    }
  });

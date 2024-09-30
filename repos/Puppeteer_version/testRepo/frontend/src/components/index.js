@@ -1,4 +1,5 @@
 import { setupRoutes } from '../controller/routes.js';
+import Alpine from 'alpinejs'
 
 document.addEventListener('alpine:init', () => {
     Alpine.plugin(PineconeRouter);
