@@ -1,5 +1,5 @@
 gnupg
 wget
 curl
-mesa-dev
 bash
+libgbm-dev

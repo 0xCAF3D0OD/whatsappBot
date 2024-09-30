@@ -20,10 +20,19 @@ services:
       - ./testRepo/frontend:/app/frontend/
     networks:
       - app-network
+    depends_on:
+      - backend
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    networks:
+      - app-network
     ports:
       - "8080:80"
     depends_on:
-      - backend
+      - frontend
 
 networks:
   app-network:
