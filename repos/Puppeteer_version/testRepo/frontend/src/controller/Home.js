@@ -1,4 +1,4 @@
-Alpine.data('Header', () => ({
+export const Header = () => ({
     template() {
         return `
             <header class="flex justify-between items-center mb-16">
@@ -12,9 +12,9 @@ Alpine.data('Header', () => ({
               </nav>
             </header>`
     }
-}));
+});
 
-Alpine.data('WelcomMessage', () => ({
+export const WelcomeMessage = () => ({
     message: 'Welcome to Our Platform',
     description: 'Plan, proof, and present your projects with a simple timeline. No complex Gantt charts,\n            ' +
         'just straightforward organization.',
@@ -25,9 +25,9 @@ Alpine.data('WelcomMessage', () => ({
           <p class="text-xl text-gray-600 max-w-2xl mx-auto" x-text="description"></p>
         </div>`
     }
-}));
+});
 
-Alpine.data('DateTimeDisplay', () => ({
+export const DateTimeDisplay = () => ({
     template() {
         return `
         <div class="text-center mb-16">
@@ -35,9 +35,9 @@ Alpine.data('DateTimeDisplay', () => ({
           <p class="text-xl text-gray-600 mt-2" x-text="currentDate"></p>
         </div>`
     }
-}));
+});
 
-Alpine.data('CoverImage', () => ({
+export const CoverImage = () => ({
     message: 'Let the chat Bot check your message',
     template() {
         return `
@@ -49,9 +49,9 @@ Alpine.data('CoverImage', () => ({
           </div>
         </div>`
     }
-}));
+});
 
-Alpine.data('ConnectionTest', () => ({
+export const ConnectionTest = () => ({
     message: 'Test redirection page',
     template() {
         return `
@@ -78,9 +78,9 @@ Alpine.data('ConnectionTest', () => ({
         </button>
         </div>`
     }
-}));
+});
 
-Alpine.data('FeaturesGrid', () => ({
+export const FeaturesGrid = () => ({
     message: 'Let the chat Bot check your message',
     description: [
         {
@@ -105,9 +105,9 @@ Alpine.data('FeaturesGrid', () => ({
             `).join('')}
         </div>`
     }
-}));
+});
 
-Alpine.data('Footer', () => ({
+export const Footer = () => ({
     message: '&copy; 2024 On Assemble. All rights reserved.',
     template() {
         return `
@@ -117,4 +117,4 @@ Alpine.data('Footer', () => ({
           </div>
         </footer>`
     }
-}));
+});
