@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }"
       x-init="setInterval(() => currentTime = new Date().toLocaleTimeString(), 1000)"
       class="container mx-auto px-4 py-8 flex-grow">
-    <div x-data="header" x-html="template()"></div>
+    <div x-data="Header" x-html="template()"></div>
     <div x-data="welcomeMessage" x-html="template()"></div>
     <div x-data="DateTimeDisplay" x-html="template()"></div>
     <div x-data="CoverImage" x-html="template()"></div>

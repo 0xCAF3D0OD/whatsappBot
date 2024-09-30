@@ -16,13 +16,15 @@ RUN npm init -y && npm install && npm install -g bash
 # Copier le reste des fichiers de l'application
 COPY ./testRepo/frontend .
 
-RUN npm install -D tailwindcss alpinejs pinecone-router && \
-    npx tailwindcss init && \
-    npx tailwindcss -i ./src/input.css -o ./src/tailwind.css
-
 # Copier la configuration Nginx
 COPY dockers/nginx.conf /etc/nginx/nginx.conf
 
+COPY dockers/launchFront.sh .
+
+RUN chmod +x launchFront.sh
+
 EXPOSE 80
+
+CMD ["/bin/bash", "-c", "launchFront.sh"]
 
 CMD ["nginx", "-g", "daemon off;"]
