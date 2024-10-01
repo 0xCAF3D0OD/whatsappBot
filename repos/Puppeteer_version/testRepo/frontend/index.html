@@ -6,36 +6,20 @@
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vite + Alpinejs App</title>
-  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="src/main.jsx"></script>
 </head>
 
-<body>
-  <section id="app">
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <p>+</p>
-    <a href="https://alpinejs.dev/" target="_blank">
-      <img src="https://alpinejs.dev/alpine_long.svg" class="logo alpine" alt="alpinejs logo" />
-    </a>
-    <h1>Hello Counter!</h1>
-    <!-- for this way change in index.js by uncomments some code -->
-    <!-- <div class="card" x-data="counter">
-      <button id="counter" @click="increment">
-        <span x-text="count"></span>
-      </button>
-    </div> -->
-    <!-- OR -->
-    <div class="card" x-data="{count:0}">
-      <button id="counter" @click="count++">
-        <span x-text="count"></span>
-      </button>
+<body class="m-4 min-h-screen flex flex-col">
+  <div id="app">
+    <div class="container mx-auto px-4 py-8 flex-grow">
+      <div x-data="Header()" x-html="template()"></div>
+      <div id="router-view"></div>
+      <div x-data="WelcomeMessage()" x-html="template()"></div>
+      <div x-data="CoverImage()" x-html="template()"></div>
+      <div x-data="ConnectionTest()" x-html="template()"></div>
+      <div x-data="FeaturesGrid()" x-html="template()"></div>
     </div>
-    <p class="read-the-docs">
-      Click on the Vite logo or Alpinejs to learn more
-    </p>
-  </section>
-
+    <div x-data="Footer()" x-html="template()"></div>
+  </div>
 </body>
-
 </html>

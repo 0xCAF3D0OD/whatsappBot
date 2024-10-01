@@ -2,12 +2,14 @@ export const Header = () => ({
     template() {
         return `
             <header class="flex justify-between items-center mb-16">
-              <h1 class="text-2xl font-bold text-custom">On Assemble</h1>
+              <nav>
+                  <a href="/" class="text-2xl font-bold text-custom hover">On Assemble</a>
+              </nav>
               <nav>
                 <ul class="flex space-x-6">
-                  <li><a href="#" class="text-custom hover:underline">Features</a></li>
-                  <li><a href="#" class="text-custom hover:underline">Pricing</a></li>
-                  <li><a href="#" class="text-custom hover:underline">About</a></li>
+                  <li><a href="/feature" class="text-custom hover:underline">Features</a></li>
+                  <li><a href="/about" class="text-custom hover:underline">Pricing</a></li>
+                  <li><a href="/contact" class="text-custom hover:underline">About</a></li>
                 </ul>
               </nav>
             </header>`
@@ -16,23 +18,12 @@ export const Header = () => ({
 
 export const WelcomeMessage = () => ({
     message: 'Welcome to Our Platform',
-    description: 'Plan, proof, and present your projects with a simple timeline. No complex Gantt charts,\n            ' +
-        'just straightforward organization.',
+    description: 'Plan, proof, and present your projects with a simple timeline. No complex Gantt charts, just straightforward organization.',
     template() {
         return `
         <div class="text-center mb-16">
           <h2 class="text-6xl font-bold text-custom mb-6" x-text="message"></h2>
           <p class="text-xl text-gray-600 max-w-2xl mx-auto" x-text="description"></p>
-        </div>`
-    }
-});
-
-export const DateTimeDisplay = () => ({
-    template() {
-        return `
-        <div class="text-center mb-16">
-          <p class="text-5xl font-light text-custom" x-text="currentTime"></p>
-          <p class="text-xl text-gray-600 mt-2" x-text="currentDate"></p>
         </div>`
     }
 });
@@ -45,7 +36,7 @@ export const CoverImage = () => ({
           <img src="https://www.contus.com/blog/wp-content/uploads/2023/03/chat-user-interface-1024x535.png"
                alt="Cover Image" class="w-full h-auto object-cover rounded-lg shadow-lg">
           <div class="absolute inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 rounded-lg">
-            <h3 className="text-4xl font-bold" x-text="message"></h3>
+            <h3 class="text-4xl font-bold" x-text="message"></h3>
           </div>
         </div>`
     }
@@ -63,7 +54,7 @@ export const ConnectionTest = () => ({
                     .then(data => {
                         this.message = data.message;
                         setTimeout(() => {
-                            Alpine.raw($router).navigate('/whatsappBot');
+                            Alpine.raw($router).navigate('/whatsappBotPage');
                         }, 1000);
                     })
                     .catch(error => {
@@ -71,11 +62,11 @@ export const ConnectionTest = () => ({
                         console.error('Error:', error);
                     });
             }
-        }" className="text-center mb-16">
-            <h3 className="text-2xl font-light text-custom mb-6" x-text="message"></h3>
+        }" class="text-center mb-16">
+            <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
             <button @click="testBackend()" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
-
-        </button>
+              Test Connection
+            </button>
         </div>`
     }
 });
@@ -100,15 +91,17 @@ export const FeaturesGrid = () => ({
         return `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             ${this.description.map(desc => `
-                <h4 class="text-xl font-semibold mb-2">${desc.title}</h4>
-                <p class="text-gray-600">${desc.text}</p>
+                <div>
+                    <h4 class="text-xl font-semibold mb-2">${desc.title}</h4>
+                    <p class="text-gray-600">${desc.text}</p>
+                </div>
             `).join('')}
         </div>`
     }
 });
 
 export const Footer = () => ({
-    message: '&copy; 2024 On Assemble. All rights reserved.',
+    message: '@2024 On Assemble. All rights reserved.',
     template() {
         return `
         <footer class="bg-gray-100 py-8">

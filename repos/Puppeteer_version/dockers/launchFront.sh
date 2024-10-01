@@ -29,5 +29,5 @@
 npm install
 
 #lancement esbuild
-#vite src/main.js --bundle --outfile=dist/bundle.js
+#vite src/main.jsx --bundle --outfile=dist/bundle.js
 npm run start
