@@ -7,7 +7,7 @@ const root = express.Router();
 const { screenshot, consoleLog } = require('../controller/botPageUtils');
 // const browserState = require("../../../../srcs/whatsapp-bot/routes/testBotFiles/browserState");
 
-root.get('/api/test', (req, res) => {
+root.get('/test', (req, res) => {
     res.json({ message: 'Hello from backend im the whatsapp bot!' });
 })
 
@@ -27,7 +27,6 @@ root.get('/', async (req, res) => {
 
     // Navigate the page to a URL.
     await whatsappPageConnection.goto('https://web.whatsapp.com/');
-
 
     // Set screen size.
     await whatsappPageConnection.setViewport({width: 1080, height: 1024});

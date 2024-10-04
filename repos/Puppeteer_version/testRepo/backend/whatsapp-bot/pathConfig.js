@@ -1,5 +1,7 @@
 const path = require('path');
 
+const Root = '/';
+const Login
 const appDir = path.resolve(path.join(__dirname, '../..'));
 const backDir = path.resolve(path.join(__dirname, '..'));
 const frontDir = path.resolve(appDir, 'frontend');

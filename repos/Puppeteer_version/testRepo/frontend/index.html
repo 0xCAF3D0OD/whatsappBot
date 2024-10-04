@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite + Alpinejs App</title>
-  <script type="module" src="src/main.jsx"></script>
-</head>
-
-<body class="m-4 min-h-screen flex flex-col">
-  <div id="app">
-    <div class="container mx-auto px-4 py-8 flex-grow">
-      <div x-data="Header()" x-html="template()"></div>
-      <div id="router-view"></div>
-      <div x-data="WelcomeMessage()" x-html="template()"></div>
-      <div x-data="CoverImage()" x-html="template()"></div>
-      <div x-data="ConnectionTest()" x-html="template()"></div>
-      <div x-data="FeaturesGrid()" x-html="template()"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + Alpinejs App</title>
+    <script type="module" src="src/main.jsx"></script>
+  </head>
+  <body class="m-4 min-h-screen flex flex-col">
+    <div id="app" x-data="router()" x-init="initRouter()">
+<!--      <nav>-->
+<!--        <a href="/" @click.prevent="navigate('/')">Home</a>-->
+<!--        <a href="/qrcode" @click.prevent="navigate('/qrcode')">QR Code</a>-->
+<!--      </nav>-->
+      <template x-if="routes[currentRoute] === 'HomeComponent'">
+        <div x-data="HomeComponent()" x-html="template()"></div>
+      </template>
+      <template x-if="routes[currentRoute] === 'QRCodeComponent'">
+        <div x-data="QRCodeComponent()" x-html="template()"></div>
+      </template>
     </div>
-    <div x-data="Footer()" x-html="template()"></div>
-  </div>
-</body>
+  </body>
 </html>

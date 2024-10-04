@@ -1,3 +1,5 @@
+import {setupConnectionTest} from "../annexe/connectionLogic.js";
+
 export const Header = () => ({
     template() {
         return `
@@ -22,17 +24,16 @@ export const WelcomeMessage = () => ({
     template() {
         return `
         <div class="text-center mb-16">
-          <h2 class="text-6xl font-bold text-custom mb-6" x-text="message"></h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto" x-text="description"></p>
+          <h2 class="text-6xl font-bold text-custom mb-6">${this.message}</h2>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">${this.description}</p>
         </div>`
     }
 });
 
 export const CoverImage = () => ({
-    message: 'Let the chat Bot check your message',
     template() {
         return `
-        <div class="relative mb-16">
+        <div x-data="{message: 'Let the chat Bot check your message',}" class="relative mb-16">
           <img src="https://www.contus.com/blog/wp-content/uploads/2023/03/chat-user-interface-1024x535.png"
                alt="Cover Image" class="w-full h-auto object-cover rounded-lg shadow-lg">
           <div class="absolute inset-0 flex items-center justify-center text-white bg-black bg-opacity-50 rounded-lg">
@@ -42,37 +43,23 @@ export const CoverImage = () => ({
     }
 });
 
-export const ConnectionTest = () => ({
-    message: 'Test redirection page',
+export const LoadWhatsappPage = () => ({
+    setup: () => ({
+        ...setupConnectionTest(),
+        message: 'Testing connection...'
+    }),
     template() {
         return `
-        <div x-data="{
-            message: 'Testing connection...',
-            testBackend() {
-                fetch('http://localhost:3000/whatsappBot/api/test')
-                    .then(response => response.json())
-                    .then(data => {
-                        this.message = data.message;
-                        setTimeout(() => {
-                            Alpine.raw($router).navigate('/whatsappBotPage');
-                        }, 1000);
-                    })
-                    .catch(error => {
-                        this.message = 'Error connecting to backend';
-                        console.error('Error:', error);
-                    });
-            }
-        }" class="text-center mb-16">
+        <div x-data="LoadWhatsappPage.setup()" class="text-center mb-16">
             <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
             <button @click="testBackend()" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
               Test Connection
             </button>
-        </div>`
+        </div>`;
     }
 });
 
 export const FeaturesGrid = () => ({
-    message: 'Let the chat Bot check your message',
     description: [
         {
             title: 'Plan',
@@ -89,7 +76,8 @@ export const FeaturesGrid = () => ({
     ],
     template() {
         return `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div x-data="{ message: 'Let the chat Bot check your message' }" 
+        class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             ${this.description.map(desc => `
                 <div>
                     <h4 class="text-xl font-semibold mb-2">${desc.title}</h4>
@@ -101,10 +89,11 @@ export const FeaturesGrid = () => ({
 });
 
 export const Footer = () => ({
-    message: '@2024 On Assemble. All rights reserved.',
+
     template() {
         return `
-        <footer class="bg-gray-100 py-8">
+        <footer x-data="{ message: '@2024 On Assemble. All rights reserved.' }" 
+        class="bg-gray-100 py-8">
           <div class="container mx-auto text-center text-custom">
             <p x-text="message"></p>
           </div>
