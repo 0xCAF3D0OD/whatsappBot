@@ -9,10 +9,6 @@
   </head>
   <body class="m-4 min-h-screen flex flex-col">
     <div id="app" x-data="router()" x-init="initRouter()">
-<!--      <nav>-->
-<!--        <a href="/" @click.prevent="navigate('/')">Home</a>-->
-<!--        <a href="/qrcode" @click.prevent="navigate('/qrcode')">QR Code</a>-->
-<!--      </nav>-->
       <template x-if="routes[currentRoute] === 'HomeComponent'">
         <div x-data="HomeComponent()" x-html="template()"></div>
       </template>

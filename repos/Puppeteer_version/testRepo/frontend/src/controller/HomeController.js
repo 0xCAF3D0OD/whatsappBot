@@ -1,4 +1,4 @@
-import {setupConnectionTest} from "../annexe/connectionLogic.js";
+import {setupConnectionTest} from "../annexe/connectionLogic.ts";
 
 export const Header = () => ({
     template() {

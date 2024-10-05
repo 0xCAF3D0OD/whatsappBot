@@ -1,4 +1,3 @@
-
 import {
     Header, WelcomeMessage, CoverImage,
     LoadWhatsappPage, FeaturesGrid, Footer

@@ -1,4 +1,4 @@
-import './tailwind.css';
+import '../assets/style/tailwind.css';
 import Alpine from 'alpinejs';
 import { router } from "./routes.js";
 import { HomeComponent } from './components/HomeComponent.js'

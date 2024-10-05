@@ -16,6 +16,17 @@ async function waitForQRCodeScan(page) {
     }
 }
 
+async function checkQRCodeStatus(whatsappPageConnection) {
+    try {
+        await whatsappPageConnection.waitForSelector('div[data-testid="chat-list"]', { timeout: 0 });
+        qrCodeScanned = true;
+        console.log('QR Code scanned successfully');
+    } catch (error) {
+        console.error('Error checking QR code status:', error);
+    }
+}
+
 module.exports = {
-    waitForQRCodeScan
+    waitForQRCodeScan,
+    checkQRCodeStatus,
 }
