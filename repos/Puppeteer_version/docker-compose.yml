@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: backend.Dockerfile
     volumes:
-      - ./testRepo/backend/:/app/backend
+      - ./srcs/backend/:/app/backend
     networks:
       - app-network
     ports:
@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: frontend.Dockerfile
     volumes:
-      - ./testRepo/frontend:/app/frontend/
+      - ./srcs/frontend:/app/frontend/
     networks:
       - app-network
     depends_on:

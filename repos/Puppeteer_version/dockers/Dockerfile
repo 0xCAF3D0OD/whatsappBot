@@ -30,7 +30,7 @@ WORKDIR /app/srcs
 
 RUN npm install -g express-generator nodemon
 
-COPY ../srcs/bot_exist.sh /app/script/
+COPY ../old_srcs/bot_exist.sh /app/script/
 
 RUN chmod +x /app/script/bot_exist.sh
 
