@@ -20,6 +20,9 @@ app.set('view engine', 'jade');
 const whatsappBot = require('./routes/root');
 app.use("/whatsappLoginPage", whatsappBot);
 
+// const whatsappBotSession = require('./routes/session');
+// app.use("/whatsappLoginPage/whatsappSession", whatsappBotSession);
+
 // Middlewares
 app.use(logger('dev'));
 app.use(express.json());

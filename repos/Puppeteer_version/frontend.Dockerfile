@@ -18,9 +18,6 @@ RUN npm init -y && npm install && npm install -g bash
 # Copier le reste des fichiers de l'application
 COPY srcs/frontend .
 
-# Copier la configuration Nginx
-#COPY dockers/nginx.conf /etc/nginx/nginx.conf
-
 COPY dockers/launchFront.sh /
 
 RUN chmod +x /launchFront.sh

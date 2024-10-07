@@ -15,6 +15,9 @@
       <template x-if="routes[currentRoute] === 'QRCodeComponent'">
         <div x-data="QRCodeComponent()" x-html="template()"></div>
       </template>
+      <template x-if="routes[currentRoute] === 'whatsappSession'">
+        <div x-data="WhatsappPageComponent()" x-html="template()"></div>
+      </template>
     </div>
   </body>
 </html>

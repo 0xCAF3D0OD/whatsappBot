@@ -1,4 +1,5 @@
-import {setupConnectionTest} from "../annexe/connectionLogic.ts";
+import {setupConnectionTest} from "../annexe/connectionLogic.js";
+import '../../assets/style/homePage.css'
 
 export const Header = () => ({
     template() {
@@ -46,18 +47,30 @@ export const CoverImage = () => ({
 export const LoadWhatsappPage = () => ({
     setup: () => ({
         ...setupConnectionTest(),
-        message: 'Testing connection...'
+        loading: false
     }),
     template() {
         return `
         <div x-data="LoadWhatsappPage.setup()" class="text-center mb-16">
             <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
-            <button @click="testBackend()" class="button-custom px-8 py-3 rounded-full text-lg font-semibold transition duration-300">
-              Test Connection
+            <button @click="testBackend()"
+                    class="button-custom px-8 py-3 rounded-full text-lg font-semibold 
+                    transition duration-300 relative overflow-hidden" 
+                    style="min-width: 180px; min-height: 48px;">
+                <span x-show="!loading" 
+                      class="absolute inset-0 flex items-center justify-center w-full">
+                    Test Connection
+                </span>
+                <span x-show="loading"
+                      class="absolute inset-0 flex items-center justify-center w-full">
+                    <div class="loader home"></div>
+                </span>
             </button>
-        </div>`;
+        </div>
+        `;
     }
 });
+
 
 export const FeaturesGrid = () => ({
     description: [

@@ -76,9 +76,9 @@ testBot.get('/', async (req, res) => {
 })
 
 // Methode HTML pour l'obtention du status de whatsapp
-testBot.get('/check_qr_code_status', async (req, res) => {
-    res.json({ scanned: qrCodeScanned })
-})
+// testBot.get('/check_qr_code_status', async (req, res) => {
+//     res.json({ scanned: qrCodeScanned })
+// })
 
 const getCurrentPage = () => browserState.getWhatsappPage();
 

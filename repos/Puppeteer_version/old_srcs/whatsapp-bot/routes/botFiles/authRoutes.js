@@ -30,7 +30,7 @@ module.exports = (bot, getPage) => {
     });
 
     // Methode HTML pour l'obtention du status de whatsapp
-    bot.get('/check_qr_code_status', async (req, res) => {
-        res.json({ scanned: qrCodeScanned })
-    })
+    // bot.get('/check_qr_code_status', async (req, res) => {
+    //     res.json({ scanned: qrCodeScanned })
+    // })
 }

@@ -15,7 +15,6 @@ async function initializeBrowser(selectorQRCode) {
         });
         browserState.setBrowser(browser);
     }
-
     if (!whatsappPage || whatsappPage.isClosed()) {
         whatsappPage = await browser.newPage();
         await whatsappPage.goto('https://web.whatsapp.com/', { timeout: 60000 })
@@ -24,7 +23,6 @@ async function initializeBrowser(selectorQRCode) {
             .then(() => screenshot(whatsappPage, 'whatsapp'));
         browserState.setWhatsappPage(whatsappPage);
     }
-
     return whatsappPage;
 }
 

@@ -1,16 +1,15 @@
-body {
-	font-family: 'Inter', sans-serif;
+.loader.home {
+	width: fit-content;
+	font-weight: bold;
+	font-family: monospace;
+	font-size: 20px;
+	clip-path: inset(0 100% 0 0);
+	animation: l5 2s steps(11) infinite;
 }
-.bg-custom {
-	background-color: #FFFFFF;
-}
-.text-custom {
-	color: #1A1A1A;
-}
-.button-custom {
-	background-color: #1A1A1A;
+.loader.home::before {
+	content: "Loading...";
 	color: white;
 }
-.button-custom:hover {
-	background-color: #333333;
+@keyframes l5 {
+	to { clip-path: inset(0 -1ch 0 0); }
 }
