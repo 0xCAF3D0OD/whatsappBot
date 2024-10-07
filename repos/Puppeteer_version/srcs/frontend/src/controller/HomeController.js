@@ -52,7 +52,7 @@ export const LoadWhatsappPage = () => ({
     template() {
         return `
         <div x-data="LoadWhatsappPage.setup()" class="text-center mb-16">
-            <h3 class="text-2xl font-light text-custom mb-6" x-text="message"></h3>
+            <h3 class="text-2xl font-light text-custom mb-6"></h3>
             <button @click="testBackend()"
                     class="button-custom px-8 py-3 rounded-full text-lg font-semibold 
                     transition duration-300 relative overflow-hidden" 

@@ -29,20 +29,24 @@ root.get('/', async (req, res) => {
     if (!browserState.getBrowser()) {
         whatsappPageConnection =  await initializeBrowser(selectorQrCode);
         consoleLog(null, null, 'initialize browser');
+        // Brings page to front (activates tab).
+        // await whatsappPageConnection.bringToFront();
     }
-
-    // Brings page to front (activates tab).
-    await whatsappPageConnection.bringToFront();
     try {
-        const QRCodeElement = await whatsappPageConnection.$(selectorQrCode);
-        if (QRCodeElement && !qrCodeScanned) {
-            await QRCodeElement.screenshot({path: path.join(config.imageDir, '1_QRCode.png')});
-            res.download(path.join(config.imageDir, '1_QRCode.png'), '1_QRCode.png');
-            scannedStatus = await waitForUserScan(whatsappPageConnection);
-            console.log(scannedStatus);
-            qrCodeScanned = await waitForQRCodeScan(whatsappPageConnection);
-            await screenshot(whatsappPageConnection, 'hasbeenscanned');
+        if (browserState.getWhatsappPage()) {
+            const QRCodeElement = await whatsappPageConnection.$(selectorQrCode);
+            if (QRCodeElement && !qrCodeScanned) {
+                await QRCodeElement.screenshot({path: path.join(config.imageDir, '1_QRCode.png')});
+
+                res.download(path.join(config.imageDir, '1_QRCode.png'), '1_QRCode.png');
+                // scannedStatus = await waitForUserScan(whatsappPageConnection);
+
+                qrCodeScanned = await waitForQRCodeScan(whatsappPageConnection);
+                await screenshot(whatsappPageConnection, 'hasbeenscanned');
+            }
         }
+        else
+            throw new Error(`browser or page aren't setup ${error}`);
     } catch(error) {
         console.error(`Error: Scanning qr code failed ${error}`);
         res.status(404).send(`Error: Scanning qr code failed ${error}`);
@@ -50,19 +54,19 @@ root.get('/', async (req, res) => {
     }
 })
 
-root.get('/whatsappSession', async (req, res) => {
-    try {
-        consoleLog(null, null, 'hello');
-        const WhatsappSessionPage = browserState.getWhatsappPage();
-        await WhatsappSessionPage.waitForSelector('h1.x1qlqyl8', { timeout: 120000 });
-
-        consoleLog(null, WhatsappSessionPage, 'whatsapp session');
-        await screenshot(WhatsappSessionPage, 'session');
-
-    } catch (error) {
-        console.error(`Error during access session: ${error}`);
-    }
-})
+// root.get('/whatsappSession', async (req, res) => {
+//     try {
+//         consoleLog(null, null, 'hello');
+//         const WhatsappSessionPage = browserState.getWhatsappPage();
+//         await WhatsappSessionPage.waitForSelector('h1.x1qlqyl8', { timeout: 120000 });
+//
+//         consoleLog(null, WhatsappSessionPage, 'whatsapp session');
+//         await screenshot(WhatsappSessionPage, 'session');
+//
+//     } catch (error) {
+//         console.error(`Error during access session: ${error}`);
+//     }
+// })
 
 /* a voir plus tard */
 root.get('/check_scanned_status', (req, res) => {

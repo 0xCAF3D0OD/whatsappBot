@@ -1,7 +1,7 @@
 const path = require('path');
-const config = require('../../config');
+const config = require('../pathConfig');
 
-const { timeOutFunction, screenshot, logs } = require('../testBotUtils.js');
+const { timeOutFunction, screenshot, logs } = require('./botPageUtils.js');
 
 async function refreshSearchBar(page, refreshSelector) {
     try {
