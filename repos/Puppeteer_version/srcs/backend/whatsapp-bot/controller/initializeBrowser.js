@@ -21,6 +21,7 @@ async function initializeBrowser(selectorQRCode) {
             .then(() => whatsappPage.setViewport({width: 1080, height: 1024}))
             .then(() => whatsappPage.waitForSelector(selectorQRCode, { timeout: 120000 }))
             .then(() => screenshot(whatsappPage, 'whatsapp'));
+
         browserState.setWhatsappPage(whatsappPage);
     }
     return whatsappPage;
