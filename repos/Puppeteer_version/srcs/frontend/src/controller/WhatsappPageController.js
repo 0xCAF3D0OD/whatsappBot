@@ -1,22 +1,19 @@
 import { notifications } from '../annexe/chatBotInterface.js'
 
-export const chatBotInterface = () => ({
+export const Chat = () => ({
     setup() {
         return {
             ...notifications(),
+            hasNotification: false,
             init() {
-                this.checkNotifications()
             }
-        }
+        };
     },
-    template(){`
-        <div x-data="chatBotInterface.setup()"
-             x-init="init"
-             className="container">
-            <div x-show="" id="notification-container">
-                <span id="notification-status">Aucune nouvelle notification</span>
-                <span id="notification-badge" className="notification-badge"></span>
+    template() {
+        return `
+        <div x-data="Chat.setup()" x-init="init">
+            <div x-data="dashboardComponent()" x-html="$data.template()">
             </div>
-        </div>        
+        </div>    
     `}
 })

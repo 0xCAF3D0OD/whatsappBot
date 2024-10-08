@@ -2,7 +2,7 @@ export const Backend = 'http://localhost:3000';
 export const Frontend = 'http://localhost:8080';
 export const Root = '/';
 export const Login = '/whatsappLoginPage';
-export const Session = '/whatsappLoginPage/whatsappSession';
+export const Session = '/whatsappSession';
 
 
 export function router() {

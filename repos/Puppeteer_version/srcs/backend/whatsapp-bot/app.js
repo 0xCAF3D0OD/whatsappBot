@@ -21,7 +21,7 @@ const whatsappBot = require('./routes/root');
 app.use("/whatsappLoginPage", whatsappBot);
 
 const whatsappBotSession = require('./routes/session');
-app.use("/whatsappLoginPage/whatsappSession", whatsappBotSession);
+app.use("/whatsappSession", whatsappBotSession);
 
 // Middlewares
 app.use(logger('dev'));

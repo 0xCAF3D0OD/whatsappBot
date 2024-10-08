@@ -3,7 +3,7 @@ module.exports = {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./assets/**/*.{js,ts,jsx,tsx}",
-    "./src/components/QRCodeComponent.js",
+    "./src/components/cardComponent.js",
   ],
   theme: {
     extend: {
@@ -26,5 +26,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+      require('@tailwindcss/forms'),
+  ],
 }

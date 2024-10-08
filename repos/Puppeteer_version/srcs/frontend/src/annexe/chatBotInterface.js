@@ -3,6 +3,7 @@ import { Session } from "../routes.js";
 let hasNewNotifications = true;
 export const notifications = () => ({
     async checkNotifications() {
+        this.hasNotification = false;
         const statusElement = document.getElementById('notification-status');
         const badgeElement = document.getElementById('notification-badge');
 
@@ -11,9 +12,13 @@ export const notifications = () => ({
             return;
         }
         statusElement.textContent = 'Vérification des notifications...';
+        const response = await fetch(`${Session}/check-notifications`);
+        const data = response.json();
+        console.log("Données reçues:", data);
         try {
             if (data.notificationCount > data.lastNotificationCount)
                 hasNewNotifications = true;
+                this.hasNotification = true;
 
             if (hasNewNotifications) {
                 statusElement.textContent = 'Nouvelles notifications';
@@ -33,10 +38,6 @@ export const notifications = () => ({
             statusElement.textContent = "Erreur lors de la vérification des notifications";
             badgeElement.style.opacity = '0';
         }
-        const response = await fetch(`${Session}/check-notifications`);
-        const data = response.json();
-        console.log("Données reçues:", data);
-
     }
 })
 

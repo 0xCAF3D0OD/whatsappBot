@@ -1,5 +1,5 @@
 import '../../assets/style/qrcodePage.css'
-import {checkingQrCode } from "../annexe/checkingQrCode.js";
+import { checkingQrCode } from "../annexe/checkingQrCode.js";
 import { checkingUserScan } from "../annexe/userScan.js";
 import { pageRedirections, setupQRCodeDownload } from "../annexe/setupQRCode.ts";
 

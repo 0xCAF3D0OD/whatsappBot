@@ -48,12 +48,6 @@ export const cardComponent = () => ({
                     <div x-show="!isScanned" x-ref="refreshButtonContainer"></div>
                     <div x-show="isScanned" x-ref="continueButtonContainer"></div>
                 </div>
-<!--                <div x-show="isScanned" class="text-center">-->
-<!--                    <a href="/whatsappLoginPage/whatsappSession" class="inline-block w-full bg-blue-600 hover:bg-blue-700 -->
-<!--                    text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out">-->
-<!--                        Continuer-->
-<!--                    </a>-->
-<!--                </div>-->
             </div>
         `;
     }

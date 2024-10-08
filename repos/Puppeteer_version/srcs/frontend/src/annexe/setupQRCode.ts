@@ -26,6 +26,6 @@ export const setupQRCodeDownload = () => ({
 
 export const pageRedirections = () => ({
   redirectToWhatsappSession() {
-      window.location.href = "/whatsappLoginPage/whatsappSession";
+      window.location.href = "/whatsappSession";
     }
 })
