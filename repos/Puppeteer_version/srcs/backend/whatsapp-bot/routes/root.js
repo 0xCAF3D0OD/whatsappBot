@@ -54,20 +54,6 @@ root.get('/', async (req, res) => {
     }
 })
 
-// root.get('/whatsappSession', async (req, res) => {
-//     try {
-//         consoleLog(null, null, 'hello');
-//         const WhatsappSessionPage = browserState.getWhatsappPage();
-//         await WhatsappSessionPage.waitForSelector('h1.x1qlqyl8', { timeout: 120000 });
-//
-//         consoleLog(null, WhatsappSessionPage, 'whatsapp session');
-//         await screenshot(WhatsappSessionPage, 'session');
-//
-//     } catch (error) {
-//         console.error(`Error during access session: ${error}`);
-//     }
-// })
-
 /* a voir plus tard */
 root.get('/check_scanned_status', (req, res) => {
     res.json({ iwasScanned: qrCodeScanned });

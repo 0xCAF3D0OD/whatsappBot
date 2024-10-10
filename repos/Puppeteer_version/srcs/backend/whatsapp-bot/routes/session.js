@@ -18,11 +18,8 @@ session.get('/', async (req, res) => {
      const WhatsappSessionPage = browserState.getWhatsappPage();
      await WhatsappSessionPage.waitForSelector('h1.x1qlqyl8', { timeout: 120000 });
 
-     consoleLog(null, WhatsappSessionPage, 'whatsapp session');
      await screenshot(WhatsappSessionPage, 'session');
-
-     consoleLog(null, WhatsappSessionPage, 'whatsapp session2');
-
+     res.download(path.join(config.imageDir, '1_QRCode.png'), '1_QRCode.png');
  } catch (error) {
      console.error(`Error during access session: ${error}`);
  }
