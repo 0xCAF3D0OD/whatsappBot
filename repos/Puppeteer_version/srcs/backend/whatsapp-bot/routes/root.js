@@ -39,14 +39,14 @@ root.get('/', async (req, res) => {
                 await QRCodeElement.screenshot({path: path.join(config.imageDir, '1_QRCode.png')});
 
                 res.download(path.join(config.imageDir, '1_QRCode.png'), '1_QRCode.png');
-                // scannedStatus = await waitForUserScan(whatsappPageConnection);
+                scannedStatus = await waitForUserScan(whatsappPageConnection);
 
                 qrCodeScanned = await waitForQRCodeScan(whatsappPageConnection);
                 await screenshot(whatsappPageConnection, 'hasbeenscanned');
             }
         }
         else
-            throw new Error(`browser or page aren't setup ${error}`);
+            throw new Error(`browser or page aren't setup`);
     } catch(error) {
         console.error(`Error: Scanning qr code failed ${error}`);
         res.status(404).send(`Error: Scanning qr code failed ${error}`);
@@ -56,7 +56,7 @@ root.get('/', async (req, res) => {
 
 /* a voir plus tard */
 root.get('/check_scanned_status', (req, res) => {
-    res.json({ iwasScanned: qrCodeScanned });
+    res.json({ iwasScanned: scannedStatus });
 });
 
 root.get('/check_qr_code_status', (req, res) => {

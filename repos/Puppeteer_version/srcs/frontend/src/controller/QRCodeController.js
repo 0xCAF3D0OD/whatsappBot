@@ -5,24 +5,20 @@ import { pageRedirections, setupQRCodeDownload } from "../annexe/setupQRCode.ts"
 
 
 export const ConnectionQRCode = () => ({
-    setup() {
-        return {
-            ...setupQRCodeDownload(),
-            ...checkingQrCode(),
-            ...pageRedirections(),
-            ...checkingUserScan(),
-            isScanned: false,
-            loading: false,
-            init() {
-                this.downloadQRCode();
-                // this.whaitOnUserScan();
-                this.waitForConfirmationQRCode();
-            }
-        };
+    ...setupQRCodeDownload(),
+    ...checkingQrCode(),
+    ...pageRedirections(),
+    ...checkingUserScan(),
+    isScanned: false,
+    loading: false,
+    init() {
+        this.downloadQRCode();
+        this.whaitOnUserScan();
+        this.waitForConfirmationQRCode();
     },
     template() {
         return `
-        <div x-data="ConnectionQRCode.setup()" x-init="init" class="flex justify-center items-center min-h-screen bg-gradient-to-b from-blue-50 to-white">
+        <div x-data="ConnectionQRCode()" x-init="init" class="flex justify-center items-center min-h-screen bg-gradient-to-b from-blue-50 to-white">
             <div x-data="cardComponent()" x-init="$nextTick(() => {
                 $refs.qrCodeContainer.innerHTML = document.getElementById('qr-code-template').innerHTML;
                 $refs.animationContainer.innerHTML = document.getElementById('animation-template').innerHTML;
@@ -88,7 +84,7 @@ export const ConnectionQRCode = () => ({
         </template>
         
         <template id="refresh-button-template">
-            <button @click="downloadQRCode" 
+            <button x-show="!loading" @click="downloadQRCode" 
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg 
                     transition duration-300 ease-in-out">
                 Rafraîchir le QR Code

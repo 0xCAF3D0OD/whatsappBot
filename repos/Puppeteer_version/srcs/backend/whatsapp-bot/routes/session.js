@@ -7,6 +7,7 @@ const session = express.Router();
 
 const { consoleLog, screenshot} = require('../controller/botPageUtils')
 const { refreshSearchBar, searchRightContact, sendMessageToContact} = require("../controller/chatNavigation");
+const {waitForUserScan, waitForQRCodeScan} = require("../controller/QRCodeSession");
 
 let currentContact = null;
 let lastNotificationCount = 0;
@@ -25,26 +26,53 @@ session.get('/', async (req, res) => {
  }
 })
 
-session.get('/check-notifications', async(req, res) => {
+session.get('/check-notifications', async (req, res) => {
+    const whatsappPage = browserState.getWhatsappPage();
+
+    try {
+        const notificationStatusSelector = 'div._ajv7._ajv8._ajvb > div > div > div > span';
+        await whatsappPage.waitForSelector(notificationStatusSelector, { timeout: 12000 });
+        const notificationCount = await whatsappPage.evaluate((selector) => {
+            const notificationElement = document.querySelector(selector);
+            return notificationElement ? parseInt(notificationElement.textContent, 10) : 0;
+        }, notificationStatusSelector);
+        lastNotificationCount = notificationCount;
+        res.json({
+            notificationCount: notificationCount || 0,
+            previousNotificationCount: lastNotificationCount || 0,
+        });
+    } catch (error) {
+        console.error("Erreur lors de la vérification des notifications:", error);
+        res.status(500).json({
+            error: "Erreur lors de la vérification des notifications",
+            details: error.message,
+            notificationCount: 0
+        });
+    }
+});
+
+session.get('/check-profile-image', async (req, res) => {
     const whatsappPage = browserState.getWhatsappPage();
     try {
-        const notificationCount = await whatsappPage.evaluate(() => {
-            const notificationElement = document.querySelector('.two._aigs ._ajv7._ajv8._ajvb span');
-            return notificationElement ? parseInt(notificationElement.textContent, 10) : 0;
-        })
-        lastNotificationCount = notificationCount;
-        return res.json({
-            notificationCount,
-            lastNotificationCount
-        })
+        const profileImageSelector = '.xyorhqc img';
+        await whatsappPage.waitForSelector(profileImageSelector, { timeout: 12000 });
+        const profileImageElement = await whatsappPage.$(profileImageSelector);
+        if (profileImageElement) {
+            await profileImageElement.screenshot({path: path.join(config.imageDir, 'profileImage.png')});
+            res.download(path.join(config.imageDir, 'profileImage.png'), 'profileImage.png');
+        }
     } catch (error) {
-        console.error("notification was not reached");
-        res.status(404).send("notification was not reached");
+        console.error("Erreur lors de la vérification des notifications:", error);
+        res.status(500).json({
+            error: "Erreur lors de la vérification de l'image de profile",
+            details: error.message,
+        });
     }
-})
+});
 
 session.get('/discussions', async (req, res) => {
     const whatsappPage = browserState.getWhatsappPage();
+
     const selectorSearchInput = 'div > div > p';
     const selectorContactInput = 'footer div > p';
     const selectorRefreshContact = 'div._ak9t  button > span';

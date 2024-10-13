@@ -1,4 +1,4 @@
-import {setupConnectionTest} from "../annexe/connectionLogic.js";
+import {setupConnectionTest} from "../annexe/connectionLogic.ts";
 import '../../assets/style/homePage.css'
 
 export const Header = () => ({
@@ -45,13 +45,11 @@ export const CoverImage = () => ({
 });
 
 export const LoadWhatsappPage = () => ({
-    setup: () => ({
-        ...setupConnectionTest(),
-        loading: false
-    }),
+    ...setupConnectionTest(),
+    loading: false,
     template() {
         return `
-        <div x-data="LoadWhatsappPage.setup()" class="text-center mb-16">
+        <div x-data="LoadWhatsappPage" class="text-center mb-16">
             <h3 class="text-2xl font-light text-custom mb-6"></h3>
             <button @click="testBackend()"
                     class="button-custom px-8 py-3 rounded-full text-lg font-semibold 

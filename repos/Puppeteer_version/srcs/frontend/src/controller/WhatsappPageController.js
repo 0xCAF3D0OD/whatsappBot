@@ -1,32 +1,14 @@
-import { notifications } from '../annexe/chatBotInterface.js'
-import { popUpBubble } from "../../assets/pages/popUpBubble.js";
+import { DashboardComponent } from "../../assets/pages/DashboardComponent.js";
 
-export const Chat = () => ({
-    setup() {
-        const notificationsData = notifications();
-        return {
-            ...notificationsData,
-            init() {
-                this.checkNotifications();
-                setInterval(() => this.checkNotifications(), 60000);
-            }
-        };
-    },
-    popUp: popUpBubble(),
+export const MainPageSession = () => ({
+    DashboardComponent: DashboardComponent(),
     template() {
         return `
-        <div x-data="Chat.setup()" x-init="init">
-            <div x-data="dashboardComponent()"
-                 x-init="$nextTick(() => {
-                    $refs.notificationsContainer.innerHTML = document.getElementById('notifications').innerHTML;
-                 })" 
-                 x-html="$data.template()"></div>
-            <template id="notifications">
-                <div x-data="Chat.popUp" 
-                     x-html="$data.template()"
-                     x-bind:notification-count="notificationCount">
+            <div class="container mx-auto px-4 py-8 flex-grow">
+                <div x-data="DashboardComponent()">
+                  <div x-html="template()"></div>
                 </div>
-            </template>
-        </div>    
-    `}
+            </div>
+        `;
+    }
 });
