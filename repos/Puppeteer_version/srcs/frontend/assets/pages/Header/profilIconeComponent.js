@@ -1,4 +1,4 @@
-import { SetUpProfileScript } from '../scripts/SetUpProfileScript';
+import { SetUpProfileScript } from '../../scripts/setUpProfileScript.ts';
 
 
 export const profilIconeComponent = () => ({

@@ -1,5 +1,5 @@
-import { notificationOpen } from "../pageUtils/notificationOpen.js";
-import { notificationButton } from "../pageUtils/notificationButton.js";
+import { notificationOpen } from "../../pageUtils/notificationOpen.js";
+import { notificationButton } from "../../pageUtils/notificationButton.js";
 
 // a raccourcire pour plus de clarter
 export const notificationsComponent = () => ({
