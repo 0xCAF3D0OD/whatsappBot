@@ -21,11 +21,11 @@ export const AstroComponent = () => ({
                     <p class="font-semibold text-primary dark:text-white">
                       <a href="#">
                         <span class="absolute inset-0"></span>
-                         Michael Andreuzza
+                         Kevin Di Nocera
                       </a>
                     </p>
                     <p class="text-zinc-500 dark:text-zinc-400">
-                      UI Design &amp; Web developer
+                      software engineer
                     </p>
                   </div>
                 </div>
@@ -37,8 +37,8 @@ export const AstroComponent = () => ({
                 <p
                   class="mt-4 text-sm text-zinc-500 dark:text-zinc-400 font-light lg:text-xl"
                 >
-                  I'm a digital designer, developer, and surfer from Malibu. In the
-                  digital world, I craft interfaces and dive into coding intricacies.
+                  Passionate, multi-skilled developer, proficient in a range of programming languages and technologies. 
+                  Proven experience in creating innovative solutions and solving complex technical challenges.
                   <br />
                   <br />
                    Beyond screens, I find solace and joy riding waves along Malibu's
@@ -231,7 +231,7 @@ export const AstroComponent = () => ({
                 </div>
                 <div class="mt-8">
                   <img
-                    src="../images/monomod.png"
+                    :src="../images/monomod.png"
                     class="rounded-2xl group-hover:ring-white/20 duration-300 invert dark:invert-0 aspect-[4/4] bg-primary/5 dark:bg-primary ring-1 ring-white/10  object-cover"
                     alt=""
                   />
@@ -455,14 +455,14 @@ export const AstroComponent = () => ({
                 <p
                   class="text-xl tracking-tight font-medium text-primary dark:text-white md:text-3xl"
                 >
-                  As a digital designer, my expertise lies in crafting distinctive
+                  As a software engineer, my expertise lies in crafting distinctive
                   visual identities for digital products.
                   <br />
                   <br />
                    I hold the belief that an engaging design begins with shared values,
                   transparent communication, and a genuine respect for the audience.
                 </p>
-                <p class="text-primary dark:text-white mt-4">Michael Andreuzza</p>
+                <p class="text-primary dark:text-white mt-4">Kevin Di Nocera</p>
               </div>
             </div>
           </div>
