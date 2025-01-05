@@ -2,11 +2,11 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "http-errors": "^2.0.0",
     "jade": "^1.11.0",
     "morgan": "^1.10.0",
-    "puppeteer": "^23.5.3",
+    "puppeteer": "^23.11.1",
     "sharp": "^0.33.5"
   }
 }

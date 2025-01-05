@@ -4,7 +4,7 @@
 
 @layer components {
 	.custom-button-body {
-		@apply flex items-center justify-center aspect-square shadow-xl dark:shadow-thick;
+		@apply flex items-center justify-center aspect-square shadow-xl dark:shadow-thick group;
 		@apply hover:bg-zinc-100 dark:hover:bg-primary;
 		@apply ring-1 bg-zinc-50 dark:ring-white/10 ring-primary/5 dark:bg-tertiary;
 		@apply rounded-lg hover:ring-primary/5 dark:hover:ring-white/20;

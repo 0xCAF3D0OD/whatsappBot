@@ -2,7 +2,7 @@ import { notificationsComponent } from "./notificationsComponent.js";
 import { profilIconeComponent } from "./profilIconeComponent.js";
 import { searchComponent } from "./searchComponent.js";
 import { sidebarComponent } from "./sidebarComponent.js";
-import {AstroComponent} from "../test.js";
+import { AstroComponent } from "../Body/AstroComponent.js";
 
 export const DashboardComponent = () => ({
 

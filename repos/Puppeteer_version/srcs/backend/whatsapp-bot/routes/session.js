@@ -7,17 +7,19 @@ const session = express.Router();
 
 const { consoleLog, screenshot} = require('../controller/botPageUtils')
 const { refreshSearchBar, searchRightContact, sendMessageToContact} = require("../controller/chatNavigation");
-const {waitForUserScan, waitForQRCodeScan} = require("../controller/QRCodeSession");
+const selector = require("../selectors");
 
 let currentContact = null;
 let lastNotificationCount = 0;
 
+session.get('*', (req, res) => {
+    res.status(404).send('Page not found');
+});
+
 session.get('/', async (req, res) => {
  try {
-     consoleLog(null, null, 'hello');
-
      const WhatsappSessionPage = browserState.getWhatsappPage();
-     await WhatsappSessionPage.waitForSelector('h1.x1qlqyl8', { timeout: 120000 });
+     await WhatsappSessionPage.waitForSelector(selector.titleName, { timeout: 120000 });
 
      await screenshot(WhatsappSessionPage, 'session');
      res.download(path.join(config.imageDir, '1_QRCode.png'), '1_QRCode.png');
@@ -30,7 +32,7 @@ session.get('/check-notifications', async (req, res) => {
     const whatsappPage = browserState.getWhatsappPage();
 
     try {
-        const notificationStatusSelector = 'div._ajv7._ajv8._ajvb > div > div > div > span';
+        const notificationStatusSelector = selector.notificationStatus;
         await whatsappPage.waitForSelector(notificationStatusSelector, { timeout: 12000 });
         const notificationCount = await whatsappPage.evaluate((selector) => {
             const notificationElement = document.querySelector(selector);
@@ -54,7 +56,7 @@ session.get('/check-notifications', async (req, res) => {
 session.get('/check-profile-image', async (req, res) => {
     const whatsappPage = browserState.getWhatsappPage();
     try {
-        const profileImageSelector = '.xyorhqc img';
+        const profileImageSelector = selector.profileImage;
         await whatsappPage.waitForSelector(profileImageSelector, { timeout: 12000 });
         const profileImageElement = await whatsappPage.$(profileImageSelector);
         if (profileImageElement) {
@@ -73,23 +75,17 @@ session.get('/check-profile-image', async (req, res) => {
 session.get('/discussions', async (req, res) => {
     const whatsappPage = browserState.getWhatsappPage();
 
-    const selectorSearchInput = 'div > div > p';
-    const selectorContactInput = 'footer div > p';
-    const selectorRefreshContact = 'div._ak9t  button > span';
     let defaultContact = req.query.contact || "test";
     let message = req.query.message || ".";
-
-    console.log("we are on our way to moneeeyy !");
 
     try {
         if (currentContact !== defaultContact) {
             currentContact = defaultContact;
-            await refreshSearchBar(whatsappPage, selectorRefreshContact);
-            await searchRightContact(whatsappPage, selectorSearchInput, currentContact);
+            await refreshSearchBar(whatsappPage, selector.refreshContactButton);
+            await searchRightContact(whatsappPage, selector.searchInput, currentContact);
         }
-        await sendMessageToContact(whatsappPage, selectorContactInput, message);
+        await sendMessageToContact(whatsappPage, selector.contactInput, message);
         console.log("Actions completed successfully 2!");
-        // res.sendFile(path.join(config., 'robot.html'));
     } catch (error) {
         console.error("whatsappPage is not accessible");
         res.status(500).send(`whatsappPage is not accessible ${error}`);

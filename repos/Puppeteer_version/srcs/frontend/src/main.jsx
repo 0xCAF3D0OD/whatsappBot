@@ -14,7 +14,7 @@ import { cardComponent } from "../assets/pages/Header/cardComponent.js";
 import { DashboardComponent } from "../assets/pages/Header/DashboardComponent.js";
 import { notificationsComponent } from "../assets/pages/Header/notificationsComponent.js";
 import { ConnectionQRCode } from "./controller/QRCodeController.js";
-import { AstroComponent } from "../assets/pages/test.js";
+import { AstroComponent } from "../assets/pages/Body/AstroComponent.js";
 
 window.Alpine = Alpine;
 

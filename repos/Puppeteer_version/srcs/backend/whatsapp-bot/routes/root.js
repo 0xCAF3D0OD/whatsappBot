@@ -15,23 +15,18 @@ process.on('SIGINT', async () => {
     process.exit();
 });
 
-root.get('/test', (req, res) => {
-    res.json({ message: 'Hello from backend im the whatsapp bot!' });
-})
-
 let qrCodeScanned = false;
 let scannedStatus = false;
 let whatsappPageConnection = null;
 
 root.get('/', async (req, res) => {
     consoleLog(null, null, 'accede to back');
-    const selectorQrCode = 'div._ak96 canvas';
+    const selectorQrCode = '#app canvas';
     if (!browserState.getBrowser()) {
         whatsappPageConnection =  await initializeBrowser(selectorQrCode);
         consoleLog(null, null, 'initialize browser');
-        // Brings page to front (activates tab).
-        // await whatsappPageConnection.bringToFront();
     }
+
     try {
         if (browserState.getWhatsappPage()) {
             const QRCodeElement = await whatsappPageConnection.$(selectorQrCode);
@@ -39,7 +34,7 @@ root.get('/', async (req, res) => {
                 await QRCodeElement.screenshot({path: path.join(config.imageDir, '1_QRCode.png')});
 
                 res.download(path.join(config.imageDir, '1_QRCode.png'), '1_QRCode.png');
-                scannedStatus = await waitForUserScan(whatsappPageConnection);
+                scannedStatus = await waitForUserScan(whatsappPageConnection, selectorQrCode);
 
                 qrCodeScanned = await waitForQRCodeScan(whatsappPageConnection);
                 await screenshot(whatsappPageConnection, 'hasbeenscanned');

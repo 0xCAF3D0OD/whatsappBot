@@ -18,12 +18,12 @@ async function waitForQRCodeScan(page) {
 }
 
 
-async function waitForUserScan(whatsappPageConnection) {
+async function waitForUserScan(whatsappPageConnection, selectorQrCode) {
     try {
         console.log("Attente du scan utilisateur...");
         await Promise.all([
             whatsappPageConnection.waitForSelector('h1.x1qlqyl8', { hidden: true, timeout: 0 }),
-            whatsappPageConnection.waitForSelector('div._ak96 canvas', { hidden: true, timeout: 0 })
+            whatsappPageConnection.waitForSelector(selectorQrCode, { hidden: true, timeout: 0 })
         ]);
         console.log("Les deux sélecteurs sont absents. Scan utilisateur détecté.");
         return true;
