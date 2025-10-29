@@ -1,7 +1,9 @@
 # whatsappBot
 Projet de Chatbot WhatsApp pour l'Assistance Scolaire
 
-# Projet de Chatbot WhatsApp pour l'Assistance Scolaire
+Ce projet propose deux implémentations distinctes d'un chatbot WhatsApp pour l'assistance scolaire :
+- **Version Twilio** : Utilise l'API Twilio pour la communication avec WhatsApp
+- **Version Puppeteer** : Utilise Puppeteer pour automatiser WhatsApp Web
 
 ## Description
 
@@ -81,3 +83,173 @@ Le projet utilise le module `logging` de Python pour enregistrer les information
 ## Note
 
 Le code inclut des commentaires pour une intégration future avec un modèle de langage (LLM) utilisant la bibliothèque `langchain`, actuellement commenté.
+
+---
+
+# Version Puppeteer
+
+## Description
+
+La version Puppeteer utilise l'automatisation de navigateur pour interagir directement avec WhatsApp Web, offrant une approche alternative qui ne nécessite pas d'API externe payante.
+
+## Architecture
+
+### Structure Multi-conteneurs
+
+L'application utilise une architecture microservices avec Docker Compose :
+
+- **Backend** : Serveur Node.js/Express avec Puppeteer
+- **Frontend** : Interface utilisateur avec Vite + Alpine.js + TailwindCSS  
+- **Nginx** : Reverse proxy et serveur web
+
+### Technologies utilisées
+
+#### Backend
+- **Node.js** avec Express.js
+- **Puppeteer** pour l'automatisation de Chrome/Chromium
+- **Jade** comme moteur de templates
+- **Chrome/Chromium** en mode headless
+
+#### Frontend
+- **Vite** comme bundler et serveur de développement
+- **Alpine.js** pour la réactivité côté client
+- **TailwindCSS** pour le styling
+- **TypeScript** pour le typage statique
+
+## Fonctionnalités
+
+### Automatisation WhatsApp Web
+- Connexion automatique à WhatsApp Web
+- Génération et affichage de QR Code pour l'authentification
+- Capture d'écran pour le monitoring
+- Gestion de l'état du navigateur et des sessions
+
+### Interface Web
+- Page d'accueil pour la configuration
+- Affichage du QR Code d'authentification
+- Interface de contrôle de la session WhatsApp
+- Routing côté client avec Alpine.js
+
+### Gestion des Sessions
+- Persistance de l'état du navigateur
+- Gestion des cookies et de l'authentification
+- Monitoring de la connexion WhatsApp
+
+## Configuration Docker
+
+### Services
+
+#### Backend (Port 3000)
+```yaml
+backend:
+  build: backend.Dockerfile
+  volumes: ./srcs/backend/:/app/backend
+  ports: "3000:3000"
+```
+
+#### Frontend 
+```yaml
+frontend:
+  build: frontend.Dockerfile
+  volumes: ./srcs/frontend:/app/frontend/
+  depends_on: backend
+```
+
+#### Nginx (Port 8080)
+```yaml
+nginx:
+  build: nginx.Dockerfile
+  ports: "8080:80"
+  depends_on: frontend
+```
+
+### Dockerfiles
+
+#### Backend
+- **Base** : `node:slim`
+- **Chrome** : Installation complète de Google Chrome
+- **Dépendances** : Express, Nodemon, CORS
+- **Scripts** : Vérification automatique de l'existence du bot
+
+#### Frontend  
+- **Base** : `node:latest`
+- **Build** : Configuration Vite pour le développement
+- **Dépendances** : Alpine.js, TailwindCSS, TypeScript
+
+## Structure des Fichiers
+
+```
+Puppeteer_version/
+├── docker-compose.yml
+├── backend.Dockerfile
+├── frontend.Dockerfile  
+├── nginx.Dockerfile
+├── dockers/
+│   ├── requirements-back.txt
+│   ├── requirements-front.txt
+│   ├── isBotExisting.sh
+│   ├── launchFront.sh
+│   └── nginx.conf
+└── srcs/
+    ├── backend/
+    │   └── whatsapp-bot/
+    │       ├── app.js
+    │       ├── controller/
+    │       │   ├── initializeBrowser.js
+    │       │   ├── browserState.js
+    │       │   ├── QRCodeSession.js
+    │       │   └── botPageUtils.js
+    │       └── routes/
+    │           ├── root.js
+    │           └── session.js
+    └── frontend/
+        ├── index.html
+        ├── package.json
+        ├── vite.config.js
+        └── src/
+            └── main.jsx
+```
+
+## API Endpoints
+
+### Backend Routes
+- `GET /whatsappLoginPage` : Page de connexion WhatsApp
+- `GET /whatsappSession` : Gestion de la session active
+- `GET /` : Route principale
+
+### Contrôleurs Principaux
+- **initializeBrowser.js** : Initialisation et configuration de Puppeteer
+- **browserState.js** : Gestion de l'état global du navigateur
+- **QRCodeSession.js** : Gestion du QR Code d'authentification
+- **botPageUtils.js** : Utilitaires pour la manipulation de page
+
+## Démarrage Rapide
+
+### Prérequis
+- Docker et Docker Compose installés
+- Port 8080 disponible sur l'hôte
+
+### Lancement
+```bash
+cd repos/Puppeteer_version
+docker-compose up --build
+```
+
+### Accès
+- **Interface Web** : http://localhost:8080
+- **Backend API** : http://localhost:3000
+
+## Avantages de la Version Puppeteer
+
+1. **Pas de coûts API** : Utilise WhatsApp Web gratuitement
+2. **Contrôle complet** : Accès à toutes les fonctionnalités de WhatsApp Web
+3. **Interface utilisateur** : Frontend dédié pour la gestion
+4. **Flexibilité** : Possibilité d'automatiser n'importe quelle action sur WhatsApp Web
+5. **Debugging** : Captures d'écran et monitoring en temps réel
+
+## Limitations
+
+1. **Dépendance au navigateur** : Nécessite Chrome/Chromium
+2. **Stabilité** : Sensible aux changements de WhatsApp Web
+3. **Ressources** : Plus consommateur en CPU/RAM qu'une API
+4. **Authentification** : Nécessite un scan QR Code périodique
